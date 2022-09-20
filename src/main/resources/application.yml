@@ -34,3 +34,4 @@ logging.level:
   org.hibernate.SQL: debug
   # 파라미터를 출력한다. 다만 너무 길기 때문에, p6spy 라이프러리를 사용할 것이다.
   # org.hibernate.type: trace
+

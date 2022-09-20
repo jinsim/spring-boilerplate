@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -18,7 +20,7 @@ public class SecurityConfiguration {
                 .headers().frameOptions().sameOrigin() // h2-console 화면을 보기 위한 처리.
                 .and()
                 .authorizeRequests() // URL 별로 자원에 대한 접근 권한 관리
-                .antMatchers("/", "/h2-console/**").permitAll()
+                .antMatchers("/", "/h2-console/**", "/accounts/**").permitAll()
                 .anyRequest().authenticated(); // 나머지 요청은 권한 인증 사용자에게만 공개
         return http.build();
     }

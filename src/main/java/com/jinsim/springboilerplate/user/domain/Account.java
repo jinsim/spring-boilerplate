@@ -11,11 +11,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", updatable = false)
+    @Column(name = "account_id", updatable = false)
     private Long id;
 
     @NotNull
@@ -28,7 +28,7 @@ public class User {
     private String password;
 
     @Builder
-    public User(String name, String email, String password) {
+    public Account(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
