@@ -1,5 +1,6 @@
 package com.jinsim.springboilerplate.user.domain;
 
+import com.jinsim.springboilerplate.user.dto.UpdateAccountReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,11 @@ public class Account {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public void updateMyAccount(UpdateAccountReqDto requestDto) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
     }
 
 }

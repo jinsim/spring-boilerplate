@@ -1,16 +1,14 @@
 package com.jinsim.springboilerplate.user.api;
 
 import com.jinsim.springboilerplate.user.domain.Account;
+import com.jinsim.springboilerplate.user.dto.UpdateAccountReqDto;
+import com.jinsim.springboilerplate.user.dto.MyAccountResDto;
 import com.jinsim.springboilerplate.user.dto.SignupReqDto;
-import com.jinsim.springboilerplate.user.dto.SignupResDto;
-import com.jinsim.springboilerplate.user.repository.UserRepository;
 import com.jinsim.springboilerplate.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,12 +21,31 @@ public class AccountController {
     private final AccountService userService;
 
     @PostMapping
-    public SignupResDto signup(@RequestBody @Valid SignupReqDto request) {
-        log.info("request={}", request);
-        Account account = request.toEntity();
-        Long accountId = userService.signup(account);
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public MyAccountResDto signup(@RequestBody @Valid final SignupReqDto requestDto) {
+        Long accountId = userService.signup(requestDto);
         Account findAccount = userService.findById(accountId);
-        log.info("user = {}, findUser = {}", account, findAccount);
-        return new SignupResDto(findAccount);
+        return new MyAccountResDto(findAccount);
+    }
+
+    @GetMapping("/{id}")
+    public MyAccountResDto getMyAccount(@PathVariable final Long id) {
+        Account account = userService.findById(id);
+        return new MyAccountResDto(account);
+    }
+
+    @PutMapping("{id}")
+    public MyAccountResDto updateMyAccount(@PathVariable final Long id,
+                                           @RequestBody final UpdateAccountReqDto requestDto) {
+        userService.update(id, requestDto);
+        Account account = userService.findById(id);
+        return new MyAccountResDto(account);
+    }
+
+    @DeleteMapping("/{id}")
+    public MyAccountResDto deleteMyAccount(@PathVariable final Long id) {
+        userService.delete(id);
+        Account account = userService.findById(id);
+        return new MyAccountResDto(account);
     }
 }

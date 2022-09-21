@@ -9,13 +9,14 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignupResDto {
+public class MyAccountResDto {
+
     @NotBlank
     private String email;
     @NotBlank
     private String name;
 
-    public SignupResDto(Account account) {
+    public MyAccountResDto(Account account) {
         this.email = account.getEmail();
         this.name = account.getName();
     }
