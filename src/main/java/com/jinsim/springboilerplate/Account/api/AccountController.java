@@ -1,10 +1,10 @@
-package com.jinsim.springboilerplate.user.api;
+package com.jinsim.springboilerplate.Account.api;
 
-import com.jinsim.springboilerplate.user.domain.Account;
-import com.jinsim.springboilerplate.user.dto.UpdateAccountReqDto;
-import com.jinsim.springboilerplate.user.dto.MyAccountResDto;
-import com.jinsim.springboilerplate.user.dto.SignupReqDto;
-import com.jinsim.springboilerplate.user.service.AccountService;
+import com.jinsim.springboilerplate.Account.domain.Account;
+import com.jinsim.springboilerplate.Account.dto.UpdateAccountReqDto;
+import com.jinsim.springboilerplate.Account.dto.MyAccountResDto;
+import com.jinsim.springboilerplate.Account.dto.SignupReqDto;
+import com.jinsim.springboilerplate.Account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

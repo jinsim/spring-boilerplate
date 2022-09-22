@@ -1,6 +1,6 @@
-package com.jinsim.springboilerplate.user.dto;
+package com.jinsim.springboilerplate.Account.dto;
 
-import com.jinsim.springboilerplate.user.domain.Account;
+import com.jinsim.springboilerplate.Account.domain.Account;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

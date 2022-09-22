@@ -1,9 +1,9 @@
-package com.jinsim.springboilerplate.user.service;
+package com.jinsim.springboilerplate.Account.service;
 
-import com.jinsim.springboilerplate.user.domain.Account;
-import com.jinsim.springboilerplate.user.dto.SignupReqDto;
-import com.jinsim.springboilerplate.user.dto.UpdateAccountReqDto;
-import com.jinsim.springboilerplate.user.repository.UserRepository;
+import com.jinsim.springboilerplate.Account.domain.Account;
+import com.jinsim.springboilerplate.Account.dto.SignupReqDto;
+import com.jinsim.springboilerplate.Account.dto.UpdateAccountReqDto;
+import com.jinsim.springboilerplate.Account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     public Account findById(Long id) {
-        return userRepository.findById(id).get();
+        return accountRepository.findById(id).get();
     }
 
-    // Command와 Query를 분리하였다. id 값인 Long을 반환한다.
     public Long signup(SignupReqDto requestDto) {
-        Account account = requestDto.toEntity();
-        userRepository.save(account);
+        Account account = accountRepository.save(requestDto.toEntity());
         // JPA에서 em.persist를 하면, 영속성 컨텍스트에 멤버 객체를 올린다.
         // 그때 영속성 컨텍스트에서는 id값이 key가 된다. (DB pk랑 매핑한 게 key가 됨)
         // @GeneratedValue를 세팅하면 id값이 항상 들어가있는 것이 보장이 된다. (em.persist 할 때)
@@ -33,13 +31,13 @@ public class AccountService {
 
     // Account를 반환하게 되면, 변경하는 Command와 조회하는 Query가 분리되지 않는다.
     public void update(Long accountId, UpdateAccountReqDto requestDto) {
-        Account account = userRepository.findById(accountId).get();
+        Account account = accountRepository.findById(accountId).get();
         account.updateMyAccount(requestDto);
     }
 
 
     public void delete(Long accountId) {
-        Account account = userRepository.findById(accountId).get();
-        userRepository.delete(account);
+        Account account = accountRepository.findById(accountId).get();
+        accountRepository.delete(account);
     }
 }
