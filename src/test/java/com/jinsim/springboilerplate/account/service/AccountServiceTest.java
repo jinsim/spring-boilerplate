@@ -91,7 +91,7 @@ class AccountServiceTest {
         return SignupReqDto.builder()
                 .email("test@email.com")
                 .name("회원가입테스트")
-                .password("pass123")
+                .password("pass123!")
                 .build();
     }
 
