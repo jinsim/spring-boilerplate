@@ -1,6 +1,6 @@
-package com.jinsim.springboilerplate.Account.repository;
+package com.jinsim.springboilerplate.account.repository;
 
-import com.jinsim.springboilerplate.Account.domain.Account;
+import com.jinsim.springboilerplate.account.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {

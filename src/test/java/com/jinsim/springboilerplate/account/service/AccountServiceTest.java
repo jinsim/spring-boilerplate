@@ -1,9 +1,9 @@
-package com.jinsim.springboilerplate.Account.service;
+package com.jinsim.springboilerplate.account.service;
 
-import com.jinsim.springboilerplate.Account.domain.Account;
-import com.jinsim.springboilerplate.Account.dto.SignupReqDto;
-import com.jinsim.springboilerplate.Account.dto.UpdateAccountReqDto;
-import com.jinsim.springboilerplate.Account.repository.AccountRepository;
+import com.jinsim.springboilerplate.account.domain.Account;
+import com.jinsim.springboilerplate.account.dto.SignupReqDto;
+import com.jinsim.springboilerplate.account.dto.UpdateAccountReqDto;
+import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

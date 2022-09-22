@@ -1,6 +1,6 @@
-package com.jinsim.springboilerplate.Account.dto;
+package com.jinsim.springboilerplate.account.dto;
 
-import com.jinsim.springboilerplate.Account.domain.Account;
+import com.jinsim.springboilerplate.account.domain.Account;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,25 +10,21 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignupReqDto {
+public class UpdateAccountReqDto {
     @NotBlank
     private String email;
     @NotBlank
     private String name;
-    @NotBlank
-    private String password;
 
     @Builder
-    public SignupReqDto(String email, String name, String password) {
+    public UpdateAccountReqDto(String email, String name) {
         this.email = email;
         this.name = name;
-        this.password = password;
     }
 
     public Account toEntity() {
         return Account.builder()
                 .email(email)
-                .password(password)
                 .name(name)
                 .build();
     }
