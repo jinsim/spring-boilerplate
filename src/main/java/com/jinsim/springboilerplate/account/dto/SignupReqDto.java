@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -39,12 +38,8 @@ public class SignupReqDto {
     public Account toEntity() {
         return Account.builder()
                 .email(email)
-                .password(encodePassword(password))
+                .password(password)
                 .name(name)
                 .build();
-    }
-
-    private String encodePassword(String password) {
-        return new BCryptPasswordEncoder().encode(password);
     }
 }

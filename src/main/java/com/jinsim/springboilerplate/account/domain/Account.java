@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -36,12 +37,16 @@ public class Account {
     public Account(String name, String email, String password) {
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = encodePassword(password);
     }
 
     public void updateMyAccount(UpdateAccountReqDto requestDto) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
+    }
+
+    private String encodePassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
     }
 
 }

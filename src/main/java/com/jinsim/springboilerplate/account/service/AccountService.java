@@ -5,6 +5,7 @@ import com.jinsim.springboilerplate.account.dto.SignupReqDto;
 import com.jinsim.springboilerplate.account.dto.UpdateAccountReqDto;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public Account findById(Long id) {
         return accountRepository.findById(id).get();
