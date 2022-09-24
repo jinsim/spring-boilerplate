@@ -1,5 +1,6 @@
 package com.jinsim.springboilerplate.error;
 
+import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,22 @@ public class ErrorHandler {
     protected ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         final List<ErrorResponse.FieldError> fieldErrors = getFieldErrors(e.getBindingResult());
         return buildFieldErrors(Error.INVALID_INPUT_VALUE, fieldErrors);
+    }
+
+    @ExceptionHandler(EmailDuplicationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleConstraintViolationException(EmailDuplicationException e) {
+        final Error error = Error.EMAIL_DUPLICATION;
+        log.error(error.getMessage(), e.getEmail() + e.getField());
+        return buildError(error);
+    }
+
+    private ErrorResponse buildError(Error error) {
+        ErrorResponse retError = ErrorResponse.builder()
+                .status(error.getStatus())
+                .message(error.getMessage())
+                .build();
+        return retError;
     }
 
     private List<ErrorResponse.FieldError> getFieldErrors(BindingResult bindingResult) {

@@ -21,7 +21,14 @@ public class ErrorResponse {
         this.detail = initDetail(detail);
     }
 
+    @Builder
+    public ErrorResponse(String message, int status) {
+        this.message = message;
+        this.status = status;
+    }
+
     private List<FieldError> initDetail(List<FieldError> detail) {
+        System.out.println("detail = " + detail);
         return (detail == null) ? new ArrayList<>() : detail;
     }
 
