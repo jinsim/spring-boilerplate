@@ -1,10 +1,7 @@
 package com.jinsim.springboilerplate.account.dto;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -35,10 +32,10 @@ public class SignupReqDto {
         this.password = password;
     }
 
-    public Account toEntity() {
+    public Account toEntity(String encodedPassword) {
         return Account.builder()
                 .email(email)
-                .password(password)
+                .password(encodedPassword)
                 .name(name)
                 .build();
     }
