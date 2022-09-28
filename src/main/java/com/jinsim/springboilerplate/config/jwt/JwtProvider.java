@@ -3,6 +3,7 @@ package com.jinsim.springboilerplate.config.jwt;
 import com.jinsim.springboilerplate.account.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +90,7 @@ public class JwtProvider {
         } catch (MalformedJwtException e) {
             log.error("잘못된 구조의 토큰입니다. {}", e.toString());
             return false;
-        } catch (SecurityException e) {
+        } catch (SignatureException e) {
             log.error("잘못 서명된 토큰입니다. {}", e.toString());
             return false;
         } catch (IllegalArgumentException e) {
@@ -98,7 +99,7 @@ public class JwtProvider {
         }
     }
 
-    // JWT 복호화해서 반환
+    // JWT payload를 복호화해서 반환
     private Claims getClaims(String token) {
         try {
             return Jwts.parserBuilder()
@@ -117,22 +118,14 @@ public class JwtProvider {
 
         // JWT에서 Claims 가져오기
         Claims claims = getClaims(token);
+        String userPk = claims.getSubject();
 
-        if (claims.get("accountId") == null) {
+        if (userPk == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserPk(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userPk);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // JWT 에서 AccountId 추출
-    private String getUserPk(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignKey(secretKey))
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
 }

@@ -24,6 +24,7 @@ public class AccountService {
 
     private final JwtProvider jwtProvider;
 
+    // 조회시에 readOnly를 켜주면 flush가 일어나지 않아서 성능의 이점을 가질 수 있다.
     @Transactional(readOnly = true)
     public Account findById(Long id) {
         return accountRepository.findById(id)
@@ -88,5 +89,4 @@ public class AccountService {
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
-
 }

@@ -3,6 +3,7 @@ package com.jinsim.springboilerplate.config.jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 
 // Request 이전에 한번만 실행되는 필터
+@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -26,6 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // HTTP Request Header에서 Token 값 가져오기
         String jwt = resolveToken(request);
 
         // 유효성 검사 후, 정상적인 토큰인 경우 Security Context에 저장한다.
@@ -36,9 +39,9 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-
     // HTTP Request Header에서 Token 값 가져오기
     public String resolveToken(HttpServletRequest request) {
+        // Header의 Authorization에 JWT이 담겨 올 것이다.
         String authorization = request.getHeader("Authorization");
         // Authorization에 들어있는 문자열이 공백이 아니고 Bearer로 시작하는지 검증한다.
         if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer ")) {

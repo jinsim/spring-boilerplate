@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+// Spring Security에서 유저의 정보를 가져오는 인터페이스
+// loginProcess.do 가 찾아오는 클래스다.
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -21,9 +23,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Account account = accountRepository.findById(Long.parseLong(accountId)).orElseThrow(
                 () -> new UsernameNotFoundException("해당 아이디를 가진 계정이 없습니다. accountId = " + accountId));
 
+        // UserDetails를 반환한다. User는 UserDetails를 상속하는 클래스이다.
         return User.builder()
                 .username(accountId)
                 .password(account.getPassword())
+                .roles("USER")
                 .build();
     }
 }
