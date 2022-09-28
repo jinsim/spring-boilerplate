@@ -20,20 +20,6 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public MyAccountResDto signup(@RequestBody @Valid final SignupReqDto requestDto) {
-        Long accountId = accountService.signup(requestDto);
-        Account findAccount = accountService.findById(accountId);
-        return new MyAccountResDto(findAccount);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto requestDto) {
-        LoginResDto responseDto = accountService.login(requestDto.getEmail(), requestDto.getPassword());
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
     @GetMapping("/{id}")
     public MyAccountResDto getMyAccount(@PathVariable final Long id) {
         Account account = accountService.findById(id);
