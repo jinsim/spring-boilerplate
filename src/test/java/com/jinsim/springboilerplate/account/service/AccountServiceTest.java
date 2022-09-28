@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -28,11 +30,15 @@ class AccountServiceTest {
     @Mock
     private AccountRepository accountRepository;
 
+
+    @Spy // Mock하지 않은 메소드는 실제 메소드로 동작
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Test
     void 회원가입_성공() {
         // given
         SignupReqDto requestDto = buildSignupReqDto();
-        Account account = requestDto.toEntity();
+        Account account = requestDto.toEntity(encodePassword(requestDto.getPassword()));
         Long accountId = 1L;
         ReflectionTestUtils.setField(account, "id", accountId);
 
@@ -47,6 +53,7 @@ class AccountServiceTest {
         Account findAccount = accountRepository.findById(findAccountId).get();
         assertEquals(account.getEmail(), findAccount.getEmail());
         assertEquals(account.getName(), findAccount.getName());
+        assertEquals(account.getPassword(), findAccount.getPassword());
     }
 
     @Test
@@ -54,7 +61,8 @@ class AccountServiceTest {
         // given
         UpdateAccountReqDto requestDto = buildUpdateAccountReqDto();
         Account newAccount = requestDto.toEntity();
-        Account oldAccount = buildSignupReqDto().toEntity();
+        SignupReqDto oldRequestDto = buildSignupReqDto();
+        Account oldAccount = oldRequestDto.toEntity(encodePassword(oldRequestDto.getPassword()));
         Long accountId = 1L;
         ReflectionTestUtils.setField(oldAccount, "id", accountId);
 
@@ -73,7 +81,8 @@ class AccountServiceTest {
     @Test
     void 회원삭제_성공() {
         // given
-        Account oldAccount = buildSignupReqDto().toEntity();
+        SignupReqDto oldRequestDto = buildSignupReqDto();
+        Account oldAccount = oldRequestDto.toEntity(encodePassword(oldRequestDto.getPassword()));
         Long accountId = 1L;
         ReflectionTestUtils.setField(oldAccount, "id", accountId);
 
@@ -85,6 +94,10 @@ class AccountServiceTest {
 
         // then
         verify(accountRepository, atLeastOnce()).delete(any(Account.class));
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     private SignupReqDto buildSignupReqDto() {
