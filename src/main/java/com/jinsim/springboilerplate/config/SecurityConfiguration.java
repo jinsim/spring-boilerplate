@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                // JwtFilter를 UsernamePasswordAuthenticationFilter 전에 추가한다.
+                // JwtFilter를 인증을 처리하는 UsernamePasswordAuthenticationFilter 전에 추가한다.
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

@@ -37,7 +37,7 @@ public class Account {
     public Account(String name, String email, String password) {
         this.name = name;
         this.email = email;
-        this.password = encodePassword(password);
+        this.password = password;
     }
 
     public void updateMyAccount(UpdateAccountReqDto requestDto) {
@@ -45,8 +45,5 @@ public class Account {
         this.email = requestDto.getEmail();
     }
 
-    private String encodePassword(String password) {
-        return new BCryptPasswordEncoder().encode(password);
-    }
 
 }
