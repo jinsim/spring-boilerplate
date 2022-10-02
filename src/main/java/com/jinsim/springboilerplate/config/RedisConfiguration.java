@@ -26,9 +26,11 @@ public class RedisConfiguration {
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        //일반적인 문자열 key value의 경우 시리얼라이저 설정
+        // 일반적인 문자열 key value의 경우 시리얼라이저 설정
+        // redis-cli로 데이터를 확인할 때 알아볼 수 있는 형태로 표시해준다.
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
+
         return redisTemplate;
     }
 }
