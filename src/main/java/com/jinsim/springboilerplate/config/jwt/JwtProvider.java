@@ -4,6 +4,7 @@ import com.jinsim.springboilerplate.account.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +26,14 @@ public class JwtProvider {
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
-    private final Long accessTokenValidationMs = 1 * 1 * 1000L; // 30분
-    private final Long refreshTokenValidationMs = 15 * 24 * 60 * 60 * 1000L; // 15일
+
+    private final Long accessTokenValidationMs = 30 * 60 * 1000L;
+
+    private final Long refreshTokenValidationMs = 15 * 24 * 60 * 60 * 1000L;
+
+    public Long getRefreshTokenValidationMs() { // Redis에 저장 시 사용
+        return refreshTokenValidationMs;
+    }
 
     // AccessToken 생성
     public String generateAccessToken(Long accountId, String email) {
@@ -70,6 +77,7 @@ public class JwtProvider {
 
     // String인 secretKey를 byte[]로 변환 후 반환한다.
     private Key getSignKey(String secretKey) {
+        // Signature에 Hmac Sha 256 알고리즘이 사용된다.
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -113,7 +121,7 @@ public class JwtProvider {
         }
     }
 
-    // JWT 검증 후 권한정보 확인
+    // JWT Claims으로 User 객체를 생성하여 Authentication 객체를 반환
     public Authentication getAuthentication(String token) {
 
         // JWT에서 Claims 가져오기

@@ -8,7 +8,9 @@ import com.jinsim.springboilerplate.account.dto.UpdateAccountReqDto;
 import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
+import com.jinsim.springboilerplate.config.redis.RedisService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,8 @@ public class AccountService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final JwtProvider jwtProvider;
+
+    private final RedisService redisService;
 
     // 조회시에 readOnly를 켜주면 flush가 일어나지 않아서 성능의 이점을 가질 수 있다.
     @Transactional(readOnly = true)
@@ -69,7 +73,6 @@ public class AccountService {
     }
 
     public LoginResDto login(LoginReqDto requestDto) {
-
         // 회원 정보가 존재하는지 확인
         Account account = findByEmail(requestDto.getEmail());
 
@@ -78,6 +81,8 @@ public class AccountService {
 
         String accessToken = jwtProvider.generateAccessToken(account.getId(), account.getEmail());
         String refreshToken = jwtProvider.generateRefreshToken();
+
+        redisService.setData(String.valueOf(account.getId()), refreshToken, jwtProvider.getRefreshTokenValidationMs());
         return new LoginResDto(account.getEmail(), accessToken, refreshToken);
     }
 
