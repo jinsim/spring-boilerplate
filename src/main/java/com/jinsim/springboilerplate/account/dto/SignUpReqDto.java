@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignupReqDto {
+public class SignUpReqDto {
 
     @NotBlank(message = "이메일은 필수로 입력되어야 합니다.")
     @Email(message = "유효하지 않은 이메일 형식입니다.",
@@ -26,7 +26,7 @@ public class SignupReqDto {
     private String password;
 
     @Builder
-    public SignupReqDto(String email, String name, String password) {
+    public SignUpReqDto(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
