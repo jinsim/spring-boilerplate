@@ -1,18 +1,20 @@
 package com.jinsim.springboilerplate.account.api;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import com.jinsim.springboilerplate.account.dto.LoginReqDto;
-import com.jinsim.springboilerplate.account.dto.LoginResDto;
-import com.jinsim.springboilerplate.account.dto.MyAccountResDto;
-import com.jinsim.springboilerplate.account.dto.SignupReqDto;
+import com.jinsim.springboilerplate.account.dto.*;
 import com.jinsim.springboilerplate.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.concurrent.TimeUnit;
+
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
 @RestController
@@ -22,17 +24,30 @@ public class AuthController {
 
     private final AccountService accountService;
 
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public MyAccountResDto signup(@RequestBody @Valid final SignupReqDto requestDto) {
-        Long accountId = accountService.signup(requestDto);
+    public MyAccountResDto signUp(@RequestBody @Valid final SignUpReqDto requestDto) {
+        Long accountId = accountService.signUp(requestDto);
         Account findAccount = accountService.findById(accountId);
         return new MyAccountResDto(findAccount);
     }
 
-    @PostMapping("/login")
-    public LoginResDto login(@RequestBody LoginReqDto requestDto) {
-        LoginResDto responseDto = accountService.login(requestDto);
-        return responseDto;
+    @PostMapping("/signIn")
+    public ResponseEntity<SignInResDto> signIn(@RequestBody SignInReqDto requestDto) {
+        SignInTokenDto tokenDto = accountService.signIn(requestDto);
+        ResponseCookie responseCookie = generateRefreshTokenCookie(tokenDto);
+
+        return ResponseEntity.ok()
+                .header(SET_COOKIE, responseCookie.toString())
+                .body(tokenDto.toSignInResDto());
+    }
+
+    public ResponseCookie generateRefreshTokenCookie(SignInTokenDto tokenDto) {
+        return ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .path("/") // 해당 경로 하위의 페이지에서만 쿠키 접근 허용. 모든 경로에서 접근 허용한다.
+                .maxAge(TimeUnit.MILLISECONDS.toSeconds(tokenDto.getRefreshTokenValidationMs())) // 쿠키 만료 시기(초). 없으면 브라우저 닫힐 때 제거
+                .secure(true) // HTTPS로 통신할 때만 쿠키가 전송된다.
+                .httpOnly(true) // JS를 통한 쿠키 접근을 막아, XSS 공격 등을 방어하기 위한 옵션이다.
+                .build();
     }
 }

@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LoginResDto {
+public class LoginTokenDto {
     private String email;
     private String accessToken;
     private String refreshToken;
 
     @Builder
-    public LoginResDto(String email, String accessToken, String refreshToken) {
+    public LoginTokenDto(String email, String accessToken, String refreshToken) {
         this.email = email;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

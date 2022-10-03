@@ -1,16 +1,16 @@
 package com.jinsim.springboilerplate.account.service;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import com.jinsim.springboilerplate.account.dto.LoginReqDto;
-import com.jinsim.springboilerplate.account.dto.LoginResDto;
-import com.jinsim.springboilerplate.account.dto.SignupReqDto;
+import com.jinsim.springboilerplate.account.dto.SignInReqDto;
+import com.jinsim.springboilerplate.account.dto.SignInTokenDto;
+import com.jinsim.springboilerplate.account.dto.SignUpReqDto;
 import com.jinsim.springboilerplate.account.dto.UpdateAccountReqDto;
 import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
 import com.jinsim.springboilerplate.config.redis.RedisService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +46,7 @@ public class AccountService {
         return accountRepository.existsByEmail(email);
     }
 
-    public Long signup(SignupReqDto requestDto) {
+    public Long signUp(SignUpReqDto requestDto) {
         if (isExistedEmail(requestDto.getEmail())) {
             throw new EmailDuplicationException(requestDto.getEmail());
         }
@@ -72,7 +72,7 @@ public class AccountService {
         accountRepository.delete(account);
     }
 
-    public LoginResDto login(LoginReqDto requestDto) {
+    public SignInTokenDto signIn(SignInReqDto requestDto) {
         // 회원 정보가 존재하는지 확인
         Account account = findByEmail(requestDto.getEmail());
 
@@ -81,16 +81,20 @@ public class AccountService {
 
         String accessToken = jwtProvider.generateAccessToken(account.getId(), account.getEmail());
         String refreshToken = jwtProvider.generateRefreshToken();
+        Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
-        redisService.setData(String.valueOf(account.getId()), refreshToken, jwtProvider.getRefreshTokenValidationMs());
-        return new LoginResDto(account.getEmail(), accessToken, refreshToken);
+        redisService.setData(String.valueOf(account.getId()), refreshToken, refreshTokenValidationMs);
+        return new SignInTokenDto(account.getEmail(), accessToken, refreshToken, refreshTokenValidationMs);
     }
+
+
 
     public void checkPassword(String password, String encodedPassword) {
         if (!passwordEncoder.matches(password, encodedPassword)) {
             throw new RuntimeException("비밀번호가 다릅니다.");
         }
     }
+
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
