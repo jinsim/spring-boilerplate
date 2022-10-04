@@ -91,7 +91,7 @@ public class AccountService {
         // 이때, DB에서 User를 가져오기 위해 UserDetailsServiceImpl에 있는 loadUserByUsername이 사용된다.
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        String accessToken = jwtProvider.generateAccessToken(authenticationToken.getName() , requestDto.getEmail());
+        String accessToken = jwtProvider.generateAccessToken(authenticationToken.getName());
         String refreshToken = jwtProvider.generateRefreshToken();
         Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
@@ -120,9 +120,7 @@ public class AccountService {
         }
 
         // 토큰 생성을 위해 accessToken에서 Claims 추출
-        Claims claims = jwtProvider.getClaims(accessToken);
-        String newAccessToken = jwtProvider.generateAccessToken(
-                claims.getSubject(), claims.get("email", String.class));
+        String newAccessToken = jwtProvider.generateAccessToken(authentication.getName());
 
         return new AccessTokenDto(accessToken);
     }
@@ -148,10 +146,9 @@ public class AccountService {
             throw new RuntimeException("저장된 Refresh Token과 일치하지 않습니다.");
         }
 
-        Claims claims = jwtProvider.getClaims(accessToken);
-        // AccessToken의 남은 시간 추출
-        Long expiration = claims.getExpiration().getTime() - new Date().getTime();
-        redisService.setData("BlackList:" + accessToken, "signout", expiration);
+        // AccessToken의 남은 시간 추출 후 BlackList에 저장
+        Long remainingTime = jwtProvider.getRemainingTime(accessToken);
+        redisService.setData("BlackList:" + accessToken, "signout", remainingTime);
         redisService.deleteData("RefreshToken:" + refreshToken);
 
         return new AccessTokenDto(accessToken);
