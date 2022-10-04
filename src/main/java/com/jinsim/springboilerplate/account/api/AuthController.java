@@ -49,7 +49,7 @@ public class AuthController {
 
         String refreshToken = rtCookie.getValue();
         if (refreshToken == null) {
-            throw new RuntimeException("refresh Token이 없습니다.");
+            throw new RuntimeException("refresh Token 이 없습니다.");
         }
 
         AccessTokenDto resDto = accountService.refresh(requestDto, refreshToken);
@@ -59,17 +59,8 @@ public class AuthController {
     }
 
     @PostMapping("sign-out")
-    public ResponseEntity<AccessTokenDto> signOut(
-            @RequestBody AccessTokenDto requestDto,
-            @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
-
-        String refreshToken = rtCookie.getValue();
-
-        if (refreshToken == null) {
-            throw new RuntimeException("refresh Token이 없습니다.");
-        }
-
-        AccessTokenDto resDto = accountService.signOut(requestDto, refreshToken);
+    public ResponseEntity<AccessTokenDto> signOut(@RequestBody AccessTokenDto requestDto) {
+        AccessTokenDto resDto = accountService.signOut(requestDto);
 
         return ResponseEntity.ok()
                 .body(resDto);

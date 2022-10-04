@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccessTokenDto {
 
-    @NotBlank(message = "AccessToken은 필수로 입력되어야 합니다.")
+    @NotBlank(message = "Access Token 은 필수로 입력되어야 합니다.")
     private String accessToken;
 
     @Builder

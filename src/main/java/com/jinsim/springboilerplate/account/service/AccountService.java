@@ -6,7 +6,6 @@ import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
 import com.jinsim.springboilerplate.config.redis.RedisService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Slf4j
 @Service
@@ -79,7 +76,6 @@ public class AccountService {
     }
 
     public SignInTokenDto signIn(SignInReqDto requestDto) {
-
         // email과 password를 통해 UsernamePasswordAuthenticationToken를 생성한다.
         UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(
                 requestDto.getEmail(), requestDto.getPassword());
@@ -122,33 +118,21 @@ public class AccountService {
         // 토큰 생성을 위해 accessToken에서 Claims 추출
         String newAccessToken = jwtProvider.generateAccessToken(authentication.getName());
 
-        return new AccessTokenDto(accessToken);
+        return new AccessTokenDto(newAccessToken);
     }
 
-    public AccessTokenDto signOut(AccessTokenDto requestDto, String refreshToken) {
-
-        if (!jwtProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("비정상적인 Refresh Token 입니다.");
-        }
-
+    public AccessTokenDto signOut(AccessTokenDto requestDto) {
         // accessToken에서 Authentication 추출하기
         String accessToken = requestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
 
-        // Redis의 RefreshToken을 가져오면서, 로그아웃된 사용자인 경우 예외 처리
-        log.info("{}", refreshToken);
-        String findRefreshToken = redisService.getRefreshToken(authentication.getName())
+        // Redis의 RefreshToken을 가져오면서, 이미 로그아웃된 사용자인 경우 예외 처리
+        String refreshToken = redisService.getRefreshToken(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("이미 로그아웃된 사용자입니다."));
-
-        // 저장되어있던 refreshToken과 일치하는지 확인
-        if (!refreshToken.equals(findRefreshToken)) {
-            log.error("저장된 토큰과 일치하지 않습니다. {} {}", refreshToken, findRefreshToken);
-            throw new RuntimeException("저장된 Refresh Token과 일치하지 않습니다.");
-        }
 
         // AccessToken의 남은 시간 추출 후 BlackList에 저장
         Long remainingTime = jwtProvider.getRemainingTime(accessToken);
-        redisService.setData("BlackList:" + accessToken, "signout", remainingTime);
+        redisService.setData("BlackList:" + accessToken, "signOut", remainingTime);
         redisService.deleteData("RefreshToken:" + refreshToken);
 
         return new AccessTokenDto(accessToken);
@@ -158,13 +142,6 @@ public class AccountService {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("해당 이메일을 가진 회원이 존재하지 않습니다."));
         return new UsernamePasswordAuthenticationToken(account.getId(), password);
-    }
-
-
-    public void checkPassword(String password, String encodedPassword) {
-        if (!passwordEncoder.matches(password, encodedPassword)) {
-            throw new RuntimeException("비밀번호가 다릅니다.");
-        }
     }
 
     private String encodePassword(String password) {
