@@ -1,20 +1,24 @@
 package com.jinsim.springboilerplate.account.service;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import com.jinsim.springboilerplate.account.dto.SignInReqDto;
-import com.jinsim.springboilerplate.account.dto.SignInTokenDto;
-import com.jinsim.springboilerplate.account.dto.SignUpReqDto;
-import com.jinsim.springboilerplate.account.dto.UpdateAccountReqDto;
+import com.jinsim.springboilerplate.account.dto.*;
 import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
 import com.jinsim.springboilerplate.config.redis.RedisService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,6 +31,8 @@ public class AccountService {
     private final JwtProvider jwtProvider;
 
     private final RedisService redisService;
+
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     // 조회시에 readOnly를 켜주면 flush가 일어나지 않아서 성능의 이점을 가질 수 있다.
     @Transactional(readOnly = true)
@@ -73,20 +79,61 @@ public class AccountService {
     }
 
     public SignInTokenDto signIn(SignInReqDto requestDto) {
-        // 회원 정보가 존재하는지 확인
-        Account account = findByEmail(requestDto.getEmail());
 
-        // password가 일치하는지 확인
-        checkPassword(requestDto.getPassword(), account.getPassword());
+        // email과 password를 통해 UsernamePasswordAuthenticationToken를 생성한다.
+        UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(
+                requestDto.getEmail(), requestDto.getPassword());
+        authenticationToken.getName();
 
-        String accessToken = jwtProvider.generateAccessToken(account.getId(), account.getEmail());
+        // AuthenticationManager를 구현한 ProviderManager를 생성한다.
+        // ProviderManager는 데이터를 DaoAuthenticationProvider에 주입받아서 호출하고,
+        // 해당 Provider 내부에 있는 authenticate에서 retrieveUser를 통해 DB에서의 User 비밀번호가 실제 비밀번호가 맞는지 비교한다.
+        // 이때, DB에서 User를 가져오기 위해 UserDetailsServiceImpl에 있는 loadUserByUsername이 사용된다.
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        String accessToken = jwtProvider.generateAccessToken(authenticationToken.getName() , requestDto.getEmail());
         String refreshToken = jwtProvider.generateRefreshToken();
         Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
-        redisService.setData(String.valueOf(account.getId()), refreshToken, refreshTokenValidationMs);
-        return new SignInTokenDto(account.getEmail(), accessToken, refreshToken, refreshTokenValidationMs);
+        redisService.setData("RefreshToken:" + authenticationToken.getName() , refreshToken, refreshTokenValidationMs);
+        return new SignInTokenDto(requestDto.getEmail(), accessToken, refreshToken, refreshTokenValidationMs);
     }
 
+    public SignInResDto refresh(RefreshReqDto requestDto, String refreshToken) {
+        // 들어온 refreshToekn 검증
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("비정상적인 Refresh Token 입니다.");
+        }
+
+        // accessToken에서 Authentication 추출하기
+        String accessToken = requestDto.getAccessToken();
+        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+
+        // Redis의 RefreshToken을 가져오면서, 로그아웃된 사용자인 경우 예외 처리
+        log.info("{}", refreshToken);
+        String findRefreshToken = redisService.getRefreshToken(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("로그아웃된 사용자입니다."));
+
+        // 저장되어있던 refreshToken과 일치하는지 확인
+        if (!refreshToken.equals(findRefreshToken)) {
+            log.error("저장된 토큰과 일치하지 않습니다. {} {}", refreshToken, findRefreshToken);
+            throw new RuntimeException("저장된 토큰과 일치하지 않습니다.");
+        }
+
+        String newAccessToken = jwtProvider.generateAccessToken(authentication.getName(), requestDto.getEmail());
+
+        SignInResDto resDto = SignInResDto.builder()
+                .email(requestDto.getEmail())
+                .accessToken(newAccessToken)
+                .build();
+        return resDto;
+    }
+
+    public UsernamePasswordAuthenticationToken getAuthenticationToken(String email, String password) {
+        Account account = accountRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("해당 이메일을 가진 회원이 존재하지 않습니다."));
+        return new UsernamePasswordAuthenticationToken(account.getId(), password);
+    }
 
 
     public void checkPassword(String password, String encodedPassword) {

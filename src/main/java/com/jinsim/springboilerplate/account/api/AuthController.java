@@ -11,6 +11,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +41,21 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(SET_COOKIE, responseCookie.toString())
                 .body(tokenDto.toSignInResDto());
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<SignInResDto> refresh(
+            @RequestBody RefreshReqDto requestDto,
+            @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
+        String refreshToken = rtCookie.getValue();
+        if (refreshToken == null) {
+            throw new RuntimeException("refresh Token이 없습니다.");
+        }
+
+        SignInResDto resDto = accountService.refresh(requestDto, refreshToken);
+
+        return ResponseEntity.ok()
+                .body(resDto);
     }
 
     public ResponseCookie generateRefreshTokenCookie(SignInTokenDto tokenDto) {
