@@ -5,7 +5,6 @@ import com.jinsim.springboilerplate.account.dto.*;
 import com.jinsim.springboilerplate.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class AuthController {
 
     private final AccountService accountService;
 
-    @PostMapping("/signUp")
+    @PostMapping("/sign-up")
     @ResponseStatus(value = HttpStatus.CREATED)
     public MyAccountResDto signUp(@RequestBody @Valid final SignUpReqDto requestDto) {
         Long accountId = accountService.signUp(requestDto);
@@ -33,7 +32,7 @@ public class AuthController {
         return new MyAccountResDto(findAccount);
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/sign-in")
     public ResponseEntity<SignInResDto> signIn(@RequestBody SignInReqDto requestDto) {
         SignInTokenDto tokenDto = accountService.signIn(requestDto);
         ResponseCookie responseCookie = generateRefreshTokenCookie(tokenDto);
@@ -44,15 +43,33 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<SignInResDto> refresh(
-            @RequestBody RefreshReqDto requestDto,
+    public ResponseEntity<AccessTokenDto> refresh(
+            @RequestBody AccessTokenDto requestDto,
             @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
+
         String refreshToken = rtCookie.getValue();
         if (refreshToken == null) {
             throw new RuntimeException("refresh Token이 없습니다.");
         }
 
-        SignInResDto resDto = accountService.refresh(requestDto, refreshToken);
+        AccessTokenDto resDto = accountService.refresh(requestDto, refreshToken);
+
+        return ResponseEntity.ok()
+                .body(resDto);
+    }
+
+    @PostMapping("sign-out")
+    public ResponseEntity<AccessTokenDto> signOut(
+            @RequestBody AccessTokenDto requestDto,
+            @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
+
+        String refreshToken = rtCookie.getValue();
+
+        if (refreshToken == null) {
+            throw new RuntimeException("refresh Token이 없습니다.");
+        }
+
+        AccessTokenDto resDto = accountService.signOut(requestDto, refreshToken);
 
         return ResponseEntity.ok()
                 .body(resDto);

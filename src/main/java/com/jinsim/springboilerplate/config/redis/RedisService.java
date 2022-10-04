@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 // RedisTemplate
@@ -24,4 +25,9 @@ public class RedisService {
     public void deleteData(String key){
         redisTemplate.delete(key);
     }
+
+    public Optional<String> getRefreshToken(String accountId) {
+        return Optional.ofNullable(getData("RefreshToken:" + accountId));
+    }
+
 }

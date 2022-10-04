@@ -36,12 +36,12 @@ public class JwtProvider {
     }
 
     // AccessToken 생성
-    public String generateAccessToken(Long accountId, String email) {
+    public String generateAccessToken(String accountId, String email) {
 
         // Registered claim. 토큰에 대한 정보들이 담겨있는 클레임. 이미 이름이 등록되어있다.
         Claims claims = Jwts.claims()
                 // 토큰 제목(sub). 고유 식별자를 넣는다.
-                .setSubject(String.valueOf(accountId))
+                .setSubject(accountId)
                 // 발급 시간(iat)
                 .setIssuedAt(new Date())
                 // 만료 시간(exp)
@@ -107,13 +107,13 @@ public class JwtProvider {
         }
     }
 
-    // JWT payload를 복호화해서 반환
-    private Claims getClaims(String token) {
+    // JWT payload를 복호화해서 반환(Public 해도 되나?)
+    public Claims getClaims(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSignKey(secretKey))
-                    .build()
-                    .parseClaimsJws(token)
+            return Jwts.parserBuilder() // JwtParserBuilder 인스턴스 생성
+                    .setSigningKey(getSignKey(secretKey)) // JWT Signature 검증을 위한 SecretKey 설정
+                    .build() // Thread-Safe한 JwtParser를 반환하기 위해 build 호출
+                    .parseClaimsJws(token) // Claim(Payload) 파싱
                     .getBody();
         } catch (ExpiredJwtException e) {
             // 만료된 토큰이어도 refresh token 검증 후 재발급할 수 있또록 claims 반환
