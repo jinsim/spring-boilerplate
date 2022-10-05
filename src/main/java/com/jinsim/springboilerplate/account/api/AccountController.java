@@ -35,9 +35,8 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public MyAccountResDto deleteMyAccount(@PathVariable final Long id) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteMyAccount(@PathVariable final Long id) {
         accountService.delete(id);
-        Account account = accountService.findById(id);
-        return new MyAccountResDto(account);
     }
 }

@@ -31,18 +31,18 @@ public class Account {
     private String name;
 
     @NotNull(message = "비밀번호는 필수로 입력되어야 합니다.")
-    private String password;
+    private String encodedPassword;
 
     @Builder
-    public Account(String name, String email, String password) {
-        this.name = name;
+    public Account(String email, String name, String encodedPassword) {
         this.email = email;
-        this.password = password;
+        this.name = name;
+        this.encodedPassword = encodedPassword;
     }
 
-    public void updateMyAccount(UpdateAccountReqDto requestDto) {
-        this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
+    public void updateMyAccount(String email, String name) {
+        this.email = email;
+        this.name = name;
     }
 
 

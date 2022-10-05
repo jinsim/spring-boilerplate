@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // UserDetails를 반환한다. User는 UserDetails를 상속하는 클래스이다.
         return User.builder()
                 .username(accountId)
-                .password(account.getPassword())
+                .password(account.getEncodedPassword())
                 .roles("USER")
                 .build();
     }

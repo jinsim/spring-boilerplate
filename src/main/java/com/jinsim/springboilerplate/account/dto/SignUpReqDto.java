@@ -35,7 +35,7 @@ public class SignUpReqDto {
     public Account toEntity(String encodedPassword) {
         return Account.builder()
                 .email(email)
-                .password(encodedPassword)
+                .encodedPassword(encodedPassword)
                 .name(name)
                 .build();
     }
