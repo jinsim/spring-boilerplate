@@ -1,7 +1,7 @@
 package com.jinsim.springboilerplate.account.service;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import com.jinsim.springboilerplate.account.dto.SignupReqDto;
+import com.jinsim.springboilerplate.account.dto.SignUpReqDto;
 import com.jinsim.springboilerplate.account.dto.UpdateAccountReqDto;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
@@ -30,14 +30,13 @@ class AccountServiceTest {
     @Mock
     private AccountRepository accountRepository;
 
-
     @Spy // Mock하지 않은 메소드는 실제 메소드로 동작
     private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     void 회원가입_성공() {
         // given
-        SignupReqDto requestDto = buildSignupReqDto();
+        SignUpReqDto requestDto = buildSignupReqDto();
         Account account = requestDto.toEntity(encodePassword(requestDto.getPassword()));
         Long accountId = 1L;
         ReflectionTestUtils.setField(account, "id", accountId);
@@ -47,13 +46,13 @@ class AccountServiceTest {
         given(accountRepository.findById(accountId)).willReturn(Optional.ofNullable(account));
 
         // when
-        Long findAccountId = accountService.signup(requestDto);
+        Long findAccountId = accountService.signUp(requestDto);
 
         // then
         Account findAccount = accountRepository.findById(findAccountId).get();
         assertEquals(account.getEmail(), findAccount.getEmail());
         assertEquals(account.getName(), findAccount.getName());
-        assertEquals(account.getPassword(), findAccount.getPassword());
+        assertEquals(account.getEncodedPassword(), findAccount.getEncodedPassword());
     }
 
     @Test
@@ -61,7 +60,7 @@ class AccountServiceTest {
         // given
         UpdateAccountReqDto requestDto = buildUpdateAccountReqDto();
         Account newAccount = requestDto.toEntity();
-        SignupReqDto oldRequestDto = buildSignupReqDto();
+        SignUpReqDto oldRequestDto = buildSignupReqDto();
         Account oldAccount = oldRequestDto.toEntity(encodePassword(oldRequestDto.getPassword()));
         Long accountId = 1L;
         ReflectionTestUtils.setField(oldAccount, "id", accountId);
@@ -81,7 +80,7 @@ class AccountServiceTest {
     @Test
     void 회원삭제_성공() {
         // given
-        SignupReqDto oldRequestDto = buildSignupReqDto();
+        SignUpReqDto oldRequestDto = buildSignupReqDto();
         Account oldAccount = oldRequestDto.toEntity(encodePassword(oldRequestDto.getPassword()));
         Long accountId = 1L;
         ReflectionTestUtils.setField(oldAccount, "id", accountId);
@@ -100,8 +99,8 @@ class AccountServiceTest {
         return passwordEncoder.encode(password);
     }
 
-    private SignupReqDto buildSignupReqDto() {
-        return SignupReqDto.builder()
+    private SignUpReqDto buildSignupReqDto() {
+        return SignUpReqDto.builder()
                 .email("test@email.com")
                 .name("회원가입테스트")
                 .password("pass123!")
