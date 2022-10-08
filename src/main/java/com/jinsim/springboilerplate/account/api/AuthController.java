@@ -18,21 +18,14 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/token")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AccountService accountService;
 
-    @PostMapping("/sign-up")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public MyAccountResDto signUp(@RequestBody @Valid final SignUpReqDto requestDto) {
-        Long accountId = accountService.signUp(requestDto);
-        Account findAccount = accountService.findById(accountId);
-        return new MyAccountResDto(findAccount);
-    }
 
-    @PostMapping("/sign-in")
+    @PostMapping
     public ResponseEntity<SignInResDto> signIn(@RequestBody SignInReqDto requestDto) {
         SignInTokenDto tokenDto = accountService.signIn(requestDto);
         ResponseCookie responseCookie = generateRefreshTokenCookie(tokenDto);
@@ -58,7 +51,7 @@ public class AuthController {
                 .body(resDto);
     }
 
-    @PostMapping("sign-out")
+    @PostMapping("blacklist")
     public ResponseEntity<AccessTokenDto> signOut(@RequestBody AccessTokenDto requestDto) {
         AccessTokenDto resDto = accountService.signOut(requestDto);
 

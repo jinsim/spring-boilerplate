@@ -14,11 +14,19 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController // @Controller + @ResponseBody
-@RequestMapping("/accounts")
+@RequestMapping("/account")
 @RequiredArgsConstructor // final이 붙은 필드에 대해 생성자를 만들어준다.
 public class AccountController {
 
     private final AccountService accountService;
+
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public MyAccountResDto signUp(@RequestBody @Valid final SignUpReqDto requestDto) {
+        Long accountId = accountService.signUp(requestDto);
+        Account findAccount = accountService.findById(accountId);
+        return new MyAccountResDto(findAccount);
+    }
 
     @GetMapping("/{id}")
     public MyAccountResDto getMyAccount(@PathVariable final Long id) {
