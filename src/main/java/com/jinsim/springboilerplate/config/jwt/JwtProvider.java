@@ -36,7 +36,7 @@ public class JwtProvider {
     }
 
     // AccessToken 생성
-    public String generateAccessToken(String accountId) {
+    public String generateAccessToken(String accountId, String email) {
 
         // Registered claim. 토큰에 대한 정보들이 담겨있는 클레임. 이미 이름이 등록되어있다.
         Claims claims = Jwts.claims()
@@ -48,7 +48,7 @@ public class JwtProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidationMs));
 
         // Private claim. 서버-클라이언트간의 협의하에 사용되는 클레임.
-        // 예) claims.put("email", email);
+        claims.put("email", email);
 
         return Jwts.builder()
                 // 헤더의 타입(typ)을 jwt로 설정
@@ -126,13 +126,14 @@ public class JwtProvider {
 
         // JWT에서 Claims 가져오기
         Claims claims = getClaims(token);
+        String email = (String) claims.get("email");
         String userPk = claims.getSubject();
 
-        if (userPk == null) {
+        if (userPk == null || email == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userPk);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

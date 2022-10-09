@@ -18,14 +18,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final AccountRepository accountRepository;
 
     @Override
-    // username 대신 PK 값을 넘겨줘도 된다.
-    public UserDetails loadUserByUsername(String accountId) throws UsernameNotFoundException {
-        Account account = accountRepository.findById(Long.parseLong(accountId)).orElseThrow(
-                () -> new UsernameNotFoundException("해당 아이디를 가진 계정이 없습니다. accountId = " + accountId));
-
+    // email 대신 PK 값을 넘겨줘도 된다. 다만 Long과 Sring을 반환하는 것이 귀찮고 예상치 못한 상황이 발생하기도 한다.
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Account account = accountRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException("해당 이메일을 가진 계정이 없습니다. email = " + email));
         // UserDetails를 반환한다. User는 UserDetails를 상속하는 클래스이다.
         return User.builder()
-                .username(accountId)
+                .username(email)
                 .password(account.getEncodedPassword())
                 .roles("USER")
                 .build();

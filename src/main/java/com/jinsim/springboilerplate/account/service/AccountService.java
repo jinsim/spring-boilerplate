@@ -79,7 +79,6 @@ public class AccountService {
         // email과 password를 통해 UsernamePasswordAuthenticationToken를 생성한다.
         UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(
                 requestDto.getEmail(), requestDto.getPassword());
-        authenticationToken.getName();
 
         // AuthenticationManager를 구현한 ProviderManager를 생성한다.
         // ProviderManager는 데이터를 DaoAuthenticationProvider에 주입받아서 호출하고,
@@ -87,7 +86,10 @@ public class AccountService {
         // 이때, DB에서 User를 가져오기 위해 UserDetailsServiceImpl에 있는 loadUserByUsername이 사용된다.
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        String accessToken = jwtProvider.generateAccessToken(authenticationToken.getName());
+        String email = authentication.getName();
+        String accountId = String.valueOf(findByEmail(email).getId());
+
+        String accessToken = jwtProvider.generateAccessToken(accountId, email);
         String refreshToken = jwtProvider.generateRefreshToken();
         Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
@@ -104,6 +106,7 @@ public class AccountService {
         // accessToken에서 Authentication 추출하기
         String accessToken = requestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        String accountId = jwtProvider.getClaims(accessToken).getSubject();
 
         // Redis의 RefreshToken을 가져오면서, 로그아웃된 사용자인 경우 예외 처리
         String findRefreshToken = redisService.getRefreshToken(authentication.getName())
@@ -116,7 +119,7 @@ public class AccountService {
         }
 
         // 토큰 생성을 위해 accessToken에서 Claims 추출
-        String newAccessToken = jwtProvider.generateAccessToken(authentication.getName());
+        String newAccessToken = jwtProvider.generateAccessToken(accountId, authentication.getName());
 
         return new AccessTokenDto(newAccessToken);
     }
@@ -141,7 +144,7 @@ public class AccountService {
     public UsernamePasswordAuthenticationToken getAuthenticationToken(String email, String password) {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("해당 이메일을 가진 회원이 존재하지 않습니다."));
-        return new UsernamePasswordAuthenticationToken(account.getId(), password);
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 
     private String encodePassword(String password) {
