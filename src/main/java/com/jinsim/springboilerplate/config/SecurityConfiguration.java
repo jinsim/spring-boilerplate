@@ -7,6 +7,7 @@ import com.jinsim.springboilerplate.config.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true) // preAuthorize 활성화
 @EnableWebSecurity  // Spring Security 설정 활성화
 @RequiredArgsConstructor
 public class SecurityConfiguration {
@@ -47,7 +49,6 @@ public class SecurityConfiguration {
                 .exceptionHandling() // 예외 처리 기능 작동
                 .authenticationEntryPoint(jwtEntryPoint) // 인증 실패시 처리
                 .accessDeniedHandler(jwtAccessDeniedHandler) // 인가 실패시 처리
-
 
                 .and() // 시큐리티는 기본적으로 세션을 사용하지만, 우리는 세션을 사용하지 않기 때문에 Stateless로 설정
                 .sessionManagement()

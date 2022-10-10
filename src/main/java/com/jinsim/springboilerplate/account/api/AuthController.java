@@ -51,7 +51,7 @@ public class AuthController {
                 .body(resDto);
     }
 
-    @PostMapping("blacklist")
+    @PostMapping("/blacklist")
     public ResponseEntity<AccessTokenDto> signOut(@RequestBody AccessTokenDto requestDto) {
         AccessTokenDto resDto = accountService.signOut(requestDto);
 

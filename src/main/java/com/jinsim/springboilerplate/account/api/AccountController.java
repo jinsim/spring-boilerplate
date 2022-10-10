@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +29,16 @@ public class AccountController {
         return new MyAccountResDto(findAccount);
     }
 
+
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and (( @accountService.findById(#id).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     public MyAccountResDto getMyAccount(@PathVariable final Long id) {
         Account account = accountService.findById(id);
         return new MyAccountResDto(account);
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("isAuthenticated() and (( @accountService.findById(#id).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     public MyAccountResDto updateMyAccount(@PathVariable final Long id,
                                            @RequestBody final UpdateAccountReqDto requestDto) {
         accountService.update(id, requestDto);
@@ -43,6 +47,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and (( @accountService.findById(#id).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteMyAccount(@PathVariable final Long id) {
         accountService.delete(id);
