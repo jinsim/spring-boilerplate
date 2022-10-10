@@ -29,6 +29,15 @@ spring:
         # 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
         default_batch_fetch_size: 500
 
+  redis:
+    host: localhost
+    port: 6379
+
+  jwt:
+    # 글자가 짧으면 WeakKeyException 에러가 발생한다. 32글자 이상이어야 한다.
+    # 추후에 환경 변수로 넣어야 한다.
+    secret: ${JWT_SECRET}
+
 logging.level:
   # logger를 통해 하이버네이트 실행 SQL을 남긴다.
   org.hibernate.SQL: debug
