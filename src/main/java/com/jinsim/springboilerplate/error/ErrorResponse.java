@@ -10,21 +10,17 @@ import java.util.List;
 public class ErrorResponse {
 
     private String message;
-    private int status;
     private List<FieldError> detail = new ArrayList<>();
 
-
     @Builder
-    public ErrorResponse(String message, int status, List<FieldError> detail) {
+    public ErrorResponse(String message, List<FieldError> detail) {
         this.message = message;
-        this.status = status;
         this.detail = initDetail(detail);
     }
 
     @Builder
-    public ErrorResponse(String message, int status) {
+    public ErrorResponse(String message) {
         this.message = message;
-        this.status = status;
     }
 
     private List<FieldError> initDetail(List<FieldError> detail) {
@@ -36,10 +32,11 @@ public class ErrorResponse {
     public static class FieldError {
         private String field;
         private String message;
-        private String value;
+        // 여러 타입을 받을 수 있도록 Object로 설정
+        private Object value;
 
         @Builder
-        public FieldError(String field, String message, String value) {
+        public FieldError(String field, String message, Object value) {
             this.field = field;
             this.message = message;
             this.value = value;
