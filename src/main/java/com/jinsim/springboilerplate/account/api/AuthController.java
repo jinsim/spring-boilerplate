@@ -41,9 +41,6 @@ public class AuthController {
             @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
 
         String refreshToken = rtCookie.getValue();
-        if (refreshToken == null) {
-            throw new RuntimeException("refresh Token 이 없습니다.");
-        }
 
         AccessTokenDto resDto = accountService.refresh(requestDto, refreshToken);
 

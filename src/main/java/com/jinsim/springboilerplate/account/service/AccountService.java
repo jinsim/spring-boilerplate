@@ -2,6 +2,7 @@ package com.jinsim.springboilerplate.account.service;
 
 import com.jinsim.springboilerplate.account.domain.Account;
 import com.jinsim.springboilerplate.account.dto.*;
+import com.jinsim.springboilerplate.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
@@ -14,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Service
@@ -35,13 +38,13 @@ public class AccountService {
     @Transactional(readOnly = true)
     public Account findById(Long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 아이디를 가진 계정이 없습니다."));
+                .orElseThrow(() -> new AccountNotFoundException("id", id));
     }
 
     @Transactional(readOnly = true)
     public Account findByEmail(String email) {
         return accountRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("해당 메일을 가진 계정이 없습니다."));
+                .orElseThrow(() -> new AccountNotFoundException("email", email));
     }
 
     @Transactional(readOnly = true)
