@@ -7,6 +7,7 @@ import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
 import com.jinsim.springboilerplate.config.redis.RedisService;
+import com.jinsim.springboilerplate.config.jwt.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Service
@@ -103,7 +102,8 @@ public class AccountService {
     public AccessTokenDto refresh(AccessTokenDto requestDto, String refreshToken) {
         // 들어온 refreshToekn 검증
         if (!jwtProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("비정상적인 Refresh Token 입니다.");
+            log.error("유효하지 않은 토큰입니다. {}", refreshToken);
+            throw new InvalidTokenException("Refresh Token", refreshToken, "검증에 실패한 토큰입니다.");
         }
 
         // accessToken에서 Authentication 추출하기
@@ -118,7 +118,7 @@ public class AccountService {
         // 저장되어있던 refreshToken과 일치하는지 확인
         if (!refreshToken.equals(findRefreshToken)) {
             log.error("저장된 토큰과 일치하지 않습니다. {} {}", refreshToken, findRefreshToken);
-            throw new RuntimeException("저장된 토큰과 일치하지 않습니다.");
+            throw new InvalidTokenException("Refresh Token", refreshToken, "저장된 토큰과 일치하지 않습니다.");
         }
 
         // 토큰 생성을 위해 accessToken에서 Claims 추출

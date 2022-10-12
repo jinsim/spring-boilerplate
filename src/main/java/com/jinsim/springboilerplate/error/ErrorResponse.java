@@ -24,7 +24,6 @@ public class ErrorResponse {
     }
 
     private List<FieldError> initDetail(List<FieldError> detail) {
-        System.out.println("detail = " + detail);
         return (detail == null) ? new ArrayList<>() : detail;
     }
 

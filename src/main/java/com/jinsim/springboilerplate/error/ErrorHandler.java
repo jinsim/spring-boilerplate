@@ -2,6 +2,7 @@ package com.jinsim.springboilerplate.error;
 
 import com.jinsim.springboilerplate.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
+import com.jinsim.springboilerplate.config.jwt.exception.InvalidTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +47,15 @@ public class ErrorHandler {
         return buildFieldErrors(error, fieldError);
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleInvalidTokenException(InvalidTokenException e) {
+        final Error error = Error.INVALID_TOKEN;
+        log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
+        List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue(), e.getMessage());
+        return buildFieldErrors(error, fieldError);
+    }
+
 
     private ErrorResponse buildError(Error error) {
         ErrorResponse retError = ErrorResponse.builder()
@@ -70,6 +79,15 @@ public class ErrorHandler {
         List<ErrorResponse.FieldError> fieldError =  new ArrayList<>(Arrays.asList(ErrorResponse.FieldError.builder()
                 .field(field)
                 .value(value)
+                .build()));
+        return fieldError;
+    }
+
+    private List<ErrorResponse.FieldError> getFieldError(String field, Object value, String message) {
+        List<ErrorResponse.FieldError> fieldError =  new ArrayList<>(Arrays.asList(ErrorResponse.FieldError.builder()
+                .field(field)
+                .value(value)
+                .message(message)
                 .build()));
         return fieldError;
     }

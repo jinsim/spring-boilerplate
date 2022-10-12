@@ -1,10 +1,10 @@
 package com.jinsim.springboilerplate.config.jwt;
 
 import com.jinsim.springboilerplate.account.service.UserDetailsServiceImpl;
+import com.jinsim.springboilerplate.config.jwt.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -130,7 +130,8 @@ public class JwtProvider {
         String userPk = claims.getSubject();
 
         if (userPk == null || email == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            log.error("권한 정보가 없는 토큰입니다. {}", token);
+            throw new InvalidTokenException("Access Token", token, "권한 정보가 없는 토큰입니다.");
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
