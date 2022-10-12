@@ -41,6 +41,10 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	
+	// Json 변환 라이브러리
+	implementation group: 'org.json', name: 'json', version: '20220320'
+
 }
 
 tasks.named('test') {

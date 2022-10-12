@@ -145,8 +145,8 @@ public class AccountService {
     }
 
     public UsernamePasswordAuthenticationToken getAuthenticationToken(String email, String password) {
-        Account account = accountRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("해당 이메일을 가진 회원이 존재하지 않습니다."));
+//        Account account = accountRepository.findByEmail(email)
+//                .orElseThrow(() -> new AccountNotFoundException("email", email));
         return new UsernamePasswordAuthenticationToken(email, password);
     }
 
