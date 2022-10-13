@@ -3,6 +3,7 @@ package com.jinsim.springboilerplate.error;
 import com.jinsim.springboilerplate.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.config.jwt.exception.InvalidTokenException;
+import com.jinsim.springboilerplate.config.redis.exception.RefreshTokenNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -53,6 +54,15 @@ public class ErrorHandler {
         final Error error = Error.INVALID_TOKEN;
         log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
         List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue(), e.getMessage());
+        return buildFieldErrors(error, fieldError);
+    }
+
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleRefreshTokenNotFoundException(EmailDuplicationException e) {
+        final Error error = Error.REFRESH_TOKEN_NOT_FOUND;
+        log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
+        List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
         return buildFieldErrors(error, fieldError);
     }
 

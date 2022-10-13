@@ -8,6 +8,7 @@ import com.jinsim.springboilerplate.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.config.jwt.JwtProvider;
 import com.jinsim.springboilerplate.config.redis.RedisService;
 import com.jinsim.springboilerplate.config.jwt.exception.InvalidTokenException;
+import com.jinsim.springboilerplate.config.redis.exception.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -95,7 +96,7 @@ public class AccountService {
         String refreshToken = jwtProvider.generateRefreshToken();
         Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
-        redisService.setData("RefreshToken:" + authenticationToken.getName() , refreshToken, refreshTokenValidationMs);
+        redisService.setData("RefreshToken:" + authentication.getName() , refreshToken, refreshTokenValidationMs);
         return new SignInTokenDto(requestDto.getEmail(), accessToken, refreshToken, refreshTokenValidationMs);
     }
 
@@ -113,7 +114,7 @@ public class AccountService {
 
         // Redis의 RefreshToken을 가져오면서, 로그아웃된 사용자인 경우 예외 처리
         String findRefreshToken = redisService.getRefreshToken(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃된 사용자입니다."));
+                .orElseThrow(() -> new RefreshTokenNotFoundException(authentication.getName()));
 
         // 저장되어있던 refreshToken과 일치하는지 확인
         if (!refreshToken.equals(findRefreshToken)) {
@@ -129,12 +130,15 @@ public class AccountService {
 
     public AccessTokenDto signOut(AccessTokenDto requestDto) {
         // accessToken에서 Authentication 추출하기
+        System.out.println("requestDto = " + requestDto);
         String accessToken = requestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
 
         // Redis의 RefreshToken을 가져오면서, 이미 로그아웃된 사용자인 경우 예외 처리
+        System.out.println("authentication.getName() = " + authentication.getName());
         String refreshToken = redisService.getRefreshToken(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("이미 로그아웃된 사용자입니다."));
+                .orElseThrow(() -> new RefreshTokenNotFoundException(authentication.getName()));
+        System.out.println("refreshToken = " + refreshToken);
 
         // AccessToken의 남은 시간 추출 후 BlackList에 저장
         Long remainingTime = jwtProvider.getRemainingTime(accessToken);

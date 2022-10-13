@@ -24,7 +24,6 @@ public class AuthController {
 
     private final AccountService accountService;
 
-
     @PostMapping
     public ResponseEntity<SignInResDto> signIn(@RequestBody SignInReqDto requestDto) {
         SignInTokenDto tokenDto = accountService.signIn(requestDto);
