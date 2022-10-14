@@ -118,6 +118,10 @@ public class JwtProvider {
         } catch (ExpiredJwtException e) {
             // 만료된 토큰이어도 refresh token 검증 후 재발급할 수 있또록 claims 반환
             return e.getClaims();
+        } catch (Exception e) {
+            // 다른 예외인 경우 throw
+            log.error("유효하지 않은 토큰입니다. {}", e.toString());
+            throw new InvalidTokenException("Access Token", token, e.toString());
         }
     }
 

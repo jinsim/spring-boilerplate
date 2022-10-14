@@ -1,7 +1,6 @@
 package com.jinsim.springboilerplate.config.jwt;
 
 import com.jinsim.springboilerplate.config.redis.RedisService;
-import com.jinsim.springboilerplate.config.redis.exception.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // BlackList에 존재하는 토큰으로 요청이 온 경우.
             Optional<String> isBlackList = redisService.getBlackList(jwt);
             isBlackList.ifPresent(t -> {
-                throw new RefreshTokenNotFoundException("이미 로그아웃된 토큰입니다.");
+                throw new RuntimeException("이미 로그아웃된 토큰입니다.");
             });
 
             Authentication authentication = jwtProvider.getAuthentication(jwt);

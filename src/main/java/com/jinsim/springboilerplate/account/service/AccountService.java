@@ -130,20 +130,17 @@ public class AccountService {
 
     public AccessTokenDto signOut(AccessTokenDto requestDto) {
         // accessToken에서 Authentication 추출하기
-        System.out.println("requestDto = " + requestDto);
         String accessToken = requestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
 
         // Redis의 RefreshToken을 가져오면서, 이미 로그아웃된 사용자인 경우 예외 처리
-        System.out.println("authentication.getName() = " + authentication.getName());
         String refreshToken = redisService.getRefreshToken(authentication.getName())
-                .orElseThrow(() -> new RefreshTokenNotFoundException(authentication.getName()));
-        System.out.println("refreshToken = " + refreshToken);
+                .orElseThrow(() -> new RefreshTokenNotFoundException("RefreshToken:" + authentication.getName()));
 
         // AccessToken의 남은 시간 추출 후 BlackList에 저장
         Long remainingTime = jwtProvider.getRemainingTime(accessToken);
         redisService.setData("BlackList:" + accessToken, "signOut", remainingTime);
-        redisService.deleteData("RefreshToken:" + refreshToken);
+        redisService.deleteData("RefreshToken:" + authentication.getName());
 
         return new AccessTokenDto(accessToken);
     }

@@ -59,7 +59,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ErrorResponse handleRefreshTokenNotFoundException(EmailDuplicationException e) {
+    protected ErrorResponse handleRefreshTokenNotFoundException(RefreshTokenNotFoundException e) {
         final Error error = Error.REFRESH_TOKEN_NOT_FOUND;
         log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
         List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
