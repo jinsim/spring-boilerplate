@@ -90,9 +90,8 @@ public class AccountService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         String email = authentication.getName();
-        String accountId = String.valueOf(findByEmail(email).getId());
 
-        String accessToken = jwtProvider.generateAccessToken(accountId, email);
+        String accessToken = jwtProvider.generateAccessToken(email);
         String refreshToken = jwtProvider.generateRefreshToken();
         Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
@@ -110,7 +109,6 @@ public class AccountService {
         // accessToken에서 Authentication 추출하기
         String accessToken = requestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
-        String accountId = jwtProvider.getClaims(accessToken).getSubject();
 
         // Redis의 RefreshToken을 가져오면서, 로그아웃된 사용자인 경우 예외 처리
         String findRefreshToken = redisService.getRefreshToken(authentication.getName())
@@ -123,7 +121,7 @@ public class AccountService {
         }
 
         // 토큰 생성을 위해 accessToken에서 Claims 추출
-        String newAccessToken = jwtProvider.generateAccessToken(accountId, authentication.getName());
+        String newAccessToken = jwtProvider.generateAccessToken(authentication.getName());
 
         return new AccessTokenDto(newAccessToken);
     }
