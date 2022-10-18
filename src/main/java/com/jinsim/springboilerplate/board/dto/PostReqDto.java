@@ -11,7 +11,6 @@ public class PostReqDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 접근 막음
     @NoArgsConstructor(access = AccessLevel.PROTECTED) // @RequestBody 시에 빈 생성자가 있어야 한다.
     public static class Create {
-        private Long id;
         private String title;
         private String content;
 
@@ -21,5 +20,12 @@ public class PostReqDto {
                     .content(content)
                     .build();
         }
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED) // @RequestBody 시에 빈 생성자가 있어야 한다.
+    public static class Update {
+        private String title;
+        private String content;
     }
 }

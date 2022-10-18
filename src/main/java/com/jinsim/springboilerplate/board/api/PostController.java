@@ -29,4 +29,12 @@ public class PostController {
         Post post = postService.findById(postId);
         return PostResDto.of(post);
     }
+
+    @PutMapping("{id}")
+    public PostResDto update(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto) {
+        postService.update(id, reqDto);
+        Post post = postService.findById(id);
+        return PostResDto.of(post);
+
+    }
 }

@@ -40,9 +40,15 @@ public class PostService {
         return postRepository.findByTitleContains(title);
     }
 
+
     public Long create(PostReqDto.Create reqDto) {
         Post post = postRepository.save(reqDto.toEntity());
         return post.getId();
+    }
+
+    public void update(Long postId, PostReqDto.Update reqDto) {
+        Post post = findById(postId);
+        post.updatePost(reqDto.getTitle(), reqDto.getContent());
     }
 
 }
