@@ -26,7 +26,7 @@ class PostRepositoryTest extends RepositoryTest {
         Account account2 = createAccount("test2@email.com", "test2", "encodedPassword2");
 
         createPost("title1", "content1", account1);
-        createPost("title1", "content1", account1);
+        createPost("test2", "content2", account1);
         createPost("title3", "content3", account1);
         createPost("title4", "content4", account2);
         createPost("title5", "content5", account2);
@@ -35,10 +35,6 @@ class PostRepositoryTest extends RepositoryTest {
     @Test
     void findAllByOrderByIdDescTest() {
         List<Post> posts = postRepository.findAllByOrderByIdDesc();
-        for (Post post : posts) {
-            System.out.println("post.getTitle() = " + post.getTitle());
-        }
-        System.out.println("posts = " + posts);
         assertThat(posts.size()).isEqualTo(5);
     }
 
@@ -51,9 +47,9 @@ class PostRepositoryTest extends RepositoryTest {
 
     @Test
     void findByTitleTest() {
-        String title = "title1";
-        List<Post> posts = postRepository.findByTitle(title);
-        assertThat(posts.size()).isEqualTo(2);
+        String title = "title";
+        List<Post> posts = postRepository.findByTitleContains(title);
+        assertThat(posts.size()).isEqualTo(4);
     }
 
     private Account createAccount(String email, String name, String encodedPassword) {

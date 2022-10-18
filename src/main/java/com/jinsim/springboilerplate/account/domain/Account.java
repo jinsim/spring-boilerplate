@@ -19,6 +19,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // pk 컬럼명은 따로 지정하는 것이 더 명확하다.
     @Column(name = "account_id", updatable = false)
     private Long id;
 
