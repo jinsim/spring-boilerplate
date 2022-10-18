@@ -51,4 +51,9 @@ public class PostService {
         post.updatePost(reqDto.getTitle(), reqDto.getContent());
     }
 
+    public void delete(Long postId) {
+        Post post = findById(postId);
+        postRepository.delete(post);
+    }
+
 }

@@ -20,8 +20,6 @@ public class PostController {
 
     private final PostService postService;
 
-    private final AccountService accountService;
-
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public PostResDto create(@RequestBody @Valid final PostReqDto.Create reqDto) {
@@ -30,11 +28,24 @@ public class PostController {
         return PostResDto.of(post);
     }
 
-    @PutMapping("{id}")
+    @GetMapping(("/{id}"))
+    @ResponseStatus(value = HttpStatus.OK)
+    public PostResDto read(@PathVariable final Long id) {
+        Post post = postService.findById(id);
+        return PostResDto.of(post);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
     public PostResDto update(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto) {
         postService.update(id, reqDto);
         Post post = postService.findById(id);
         return PostResDto.of(post);
+    }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void delete(@PathVariable final Long id) {
+        postService.delete(id);
     }
 }
