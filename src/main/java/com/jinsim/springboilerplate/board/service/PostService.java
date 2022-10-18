@@ -2,6 +2,7 @@ package com.jinsim.springboilerplate.board.service;
 
 import com.jinsim.springboilerplate.account.domain.Account;
 import com.jinsim.springboilerplate.board.domain.Post;
+import com.jinsim.springboilerplate.board.dto.PostReqDto;
 import com.jinsim.springboilerplate.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,5 +40,9 @@ public class PostService {
         return postRepository.findByTitleContains(title);
     }
 
+    public Long create(PostReqDto.Create reqDto) {
+        Post post = postRepository.save(reqDto.toEntity());
+        return post.getId();
+    }
 
 }

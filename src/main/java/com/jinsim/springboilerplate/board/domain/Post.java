@@ -1,17 +1,14 @@
 package com.jinsim.springboilerplate.board.domain;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA에서는 프록시를 생성을 위해서 반드시 기본 생성자 하나를 생성해야한다.
 public class Post {
 
     @Id
@@ -28,6 +25,7 @@ public class Post {
     private String content;
 
     @ManyToOne
+//    @NotNull(message = "작성자는 필수로 입력되어야 합니다.")
     @JoinColumn(name = "account_id", updatable = false)
     private Account author;
 

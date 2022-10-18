@@ -9,6 +9,7 @@ public class PostReqDto {
     @Getter
     @Builder // 생성자가 없는 경우, Package 레벨의 모든 인자를 받는 생성자를 생성한다.
     @AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 접근 막음
+    @NoArgsConstructor(access = AccessLevel.PROTECTED) // @RequestBody 시에 빈 생성자가 있어야 한다.
     public static class Create {
         private Long id;
         private String title;
