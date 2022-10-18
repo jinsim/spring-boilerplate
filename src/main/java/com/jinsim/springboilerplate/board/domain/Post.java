@@ -29,12 +29,12 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "account_id", updatable = false)
-    private Account account;
+    private Account author;
 
     @Builder
-    public Post(String title, String content, Account account) {
+    public Post(String title, String content, Account author) {
         this.title = title;
         this.content = content;
-        this.account = account;
+        this.author = author;
     }
 }
