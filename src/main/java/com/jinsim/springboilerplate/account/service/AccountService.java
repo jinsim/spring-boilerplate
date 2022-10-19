@@ -69,12 +69,12 @@ public class AccountService {
 
     // Account를 반환하게 되면, 변경하는 Command와 조회하는 Query가 분리되지 않는다.
     public void update(Long accountId, UpdateAccountReqDto requestDto) {
-        Account account = accountRepository.findById(accountId).get();
+        Account account = findById(accountId);
         account.updateMyAccount(requestDto.getEmail(), requestDto.getName());
     }
 
     public void delete(Long accountId) {
-        Account account = accountRepository.findById(accountId).get();
+        Account account = findById(accountId);
         accountRepository.delete(account);
     }
 
@@ -144,8 +144,6 @@ public class AccountService {
     }
 
     public UsernamePasswordAuthenticationToken getAuthenticationToken(String email, String password) {
-//        Account account = accountRepository.findByEmail(email)
-//                .orElseThrow(() -> new AccountNotFoundException("email", email));
         return new UsernamePasswordAuthenticationToken(email, password);
     }
 

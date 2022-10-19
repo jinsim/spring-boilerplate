@@ -37,7 +37,7 @@ public class AccountController {
         return new MyAccountResDto(account);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() and (( @accountService.findById(#id).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     public MyAccountResDto updateMyAccount(@PathVariable final Long id,
                                            @RequestBody final UpdateAccountReqDto requestDto) {
