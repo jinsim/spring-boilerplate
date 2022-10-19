@@ -39,9 +39,9 @@ class PostRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    void findByAuthorTest() {
+    void findByWriterTest() {
         Account account = accountRepository.findByEmail("test1@email.com").get();
-        List<Post> posts = postRepository.findByAuthor(account);
+        List<Post> posts = postRepository.findByWriter(account);
         assertThat(posts.size()).isEqualTo(3);
     }
 
@@ -61,11 +61,11 @@ class PostRepositoryTest extends RepositoryTest {
         return accountRepository.save(account);
     }
 
-    private Post createPost(String title, String content, Account author) {
+    private Post createPost(String title, String content, Account writer) {
         Post post = Post.builder()
                 .title(title)
                 .content(content)
-                .author(author)
+                .writer(writer)
                 .build();
         return postRepository.save(post);
     }

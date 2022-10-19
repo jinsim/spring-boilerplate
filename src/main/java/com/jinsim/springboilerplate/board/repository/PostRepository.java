@@ -10,7 +10,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 명명 규칙을 준수한다면, SQL문을 자동으로 만들어준다.
     List<Post> findAllByOrderByIdDesc(); // 최신 글을 위로 올리기 위해서 내림차순으로 정렬한다.
-    List<Post> findByAuthor(Account account);
+    List<Post> findByWriter(Account account);
     List<Post> findByTitleContains(String title);
 
 

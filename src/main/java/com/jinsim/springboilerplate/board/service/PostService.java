@@ -31,8 +31,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findByAuthor(Account author) {
-        return postRepository.findByAuthor(author);
+    public List<Post> findByWriter(Account author) {
+        return postRepository.findByWriter(author);
     }
 
     @Transactional(readOnly = true)
