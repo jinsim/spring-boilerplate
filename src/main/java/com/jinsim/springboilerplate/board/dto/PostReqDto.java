@@ -14,10 +14,11 @@ public class PostReqDto {
         private String title;
         private String content;
 
-        public Post toEntity() {
+        public Post toEntity(Account writer) {
             return Post.builder()
                     .title(title)
                     .content(content)
+                    .writer(writer)
                     .build();
         }
     }

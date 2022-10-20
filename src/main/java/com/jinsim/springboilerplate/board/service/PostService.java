@@ -41,8 +41,8 @@ public class PostService {
     }
 
 
-    public Long create(PostReqDto.Create reqDto) {
-        Post post = postRepository.save(reqDto.toEntity());
+    public Long create(PostReqDto.Create reqDto, Account account) {
+        Post post = postRepository.save(reqDto.toEntity(account));
         return post.getId();
     }
 

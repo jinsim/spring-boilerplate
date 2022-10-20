@@ -25,7 +25,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-//    @NotNull(message = "작성자는 필수로 입력되어야 합니다.")
+    @NotNull(message = "작성자는 필수로 입력되어야 합니다.")
     @JoinColumn(name = "account_id", updatable = false)
     private Account writer;
 
