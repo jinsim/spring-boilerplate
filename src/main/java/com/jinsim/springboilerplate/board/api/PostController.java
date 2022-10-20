@@ -43,17 +43,16 @@ public class PostController {
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() and (( @postService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto update(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto,
-                             @AuthUser Account account) {
+    public PostResDto update(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto) {
         postService.update(id, reqDto);
         Post post = postService.findById(id);
         return PostResDto.of(post);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and (( @postService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable final Long id,
-                       @AuthUser Account account) {
+    public void delete(@PathVariable final Long id) {
         postService.delete(id);
     }
 }
