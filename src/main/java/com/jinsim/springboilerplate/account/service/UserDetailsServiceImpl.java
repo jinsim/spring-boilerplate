@@ -22,11 +22,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("해당 이메일을 가진 계정이 없습니다. email = " + email));
-        // UserDetails를 반환한다. User는 UserDetails를 상속하는 클래스이다.
-        return User.builder()
-                .username(email)
-                .password(account.getEncodedPassword())
-                .roles("USER")
-                .build();
+
+        // UserDetails를 반환한다.
+        return new AccountAdapter(account);
     }
 }
