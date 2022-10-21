@@ -1,30 +1,26 @@
 package com.jinsim.springboilerplate.board.domain;
 
 import com.jinsim.springboilerplate.account.domain.Account;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA에서는 프록시를 생성을 위해서 반드시 기본 생성자 하나를 생성해야한다.
-public class Post {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "comment_id")
     private Long id;
 
-    @NotNull(message = "제목은 필수로 입력되어야 합니다.")
-    @Column(length = 500)
-    private String title;
-
     @NotNull(message = "내용은 필수로 입력되어야 합니다.")
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 1000)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,27 +28,26 @@ public class Post {
     @JoinColumn(name = "account_id", updatable = false)
     private Account writer;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    // post에만 persist 하면 되고, post만 삭제하면 댓글도 다 삭제된다.
-    private List<Comment> commentList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "게시글은 필수로 입력되어야 합니다.")
+    @JoinColumn(name = "post_id")
+    private Post post;
 
 
     // 연관관계 편의 메소드
-    public void addComment(Comment comment) {
-        commentList.add(comment);
-        comment.setPost(this);
+    protected void setPost(Post post) {
+        this.post = post;
     }
-
 
     @Builder
-    public Post(String title, String content, Account writer) {
-        this.title = title;
+    public Comment(String content, Account writer, Post post) {
         this.content = content;
         this.writer = writer;
+        this.post = post;
     }
 
-    public void updatePost(String title, String content) {
-        this.title = title;
+    public void updateComment(String content) {
         this.content = content;
     }
+
 }
