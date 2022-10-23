@@ -17,6 +17,7 @@ public class CommentListResDto {
 
     private Long postId;
     private List<SingleComment> comments;
+    private Integer count;
 
     @Getter
     public static class SingleComment{
@@ -37,6 +38,7 @@ public class CommentListResDto {
         return CommentListResDto.builder()
                 .postId(postId)
                 .comments(commentList.stream().map(SingleComment::of).collect(Collectors.toList()))
+                .count(commentList.size())
                 .build();
     }
 }
