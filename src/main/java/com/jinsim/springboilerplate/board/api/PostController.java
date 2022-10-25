@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 

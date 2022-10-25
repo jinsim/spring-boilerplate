@@ -18,26 +18,28 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/posts/{postId}/comments")
 @RequiredArgsConstructor
-public class CommentController {
+public class PostCommentController {
 
     private final CommentService commentService;
 
-    @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and (( @commentService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
-    @ResponseStatus(value = HttpStatus.OK)
-    public CommentResDto updateComment(@PathVariable final Long id, @RequestBody @Valid final CommentReqDto.Update reqDto) {
-        commentService.update(reqDto, id);
-        Comment comment = commentService.findById(id);
+    @PostMapping
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public CommentResDto createComment(@PathVariable final Long postId, @RequestBody @Valid final CommentReqDto.Create reqDto,
+                                       @AuthUser Account account) {
+
+        Long commentId = commentService.create(reqDto, postId, account);
+        Comment comment = commentService.findById(commentId);
         return CommentResDto.of(comment);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and (( @commentService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteComment(@PathVariable final Long id) {
-        commentService.delete(id);
-    }
+    public CommentListResDto readCommentList(@PathVariable final Long postId) {
 
+        List<Comment> commentList = commentService.findByPost(postId);
+        return CommentListResDto.of(postId, commentList);
+    }
 }

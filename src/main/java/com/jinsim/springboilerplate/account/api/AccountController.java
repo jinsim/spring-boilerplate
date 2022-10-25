@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController // @Controller + @ResponseBody
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 @RequiredArgsConstructor // final이 붙은 필드에 대해 생성자를 만들어준다.
 public class AccountController {
 
