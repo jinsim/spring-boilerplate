@@ -37,9 +37,9 @@ public class PostCommentController {
 
     @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public CommentListResDto readCommentList(@PathVariable final Long postId) {
+    public CommentListResDto.Post readCommentList(@PathVariable final Long postId) {
 
         List<Comment> commentList = commentService.findByPost(postId);
-        return CommentListResDto.of(postId, commentList);
+        return CommentListResDto.Post.of(postId, commentList);
     }
 }

@@ -2,43 +2,78 @@ package com.jinsim.springboilerplate.board.dto;
 
 import com.jinsim.springboilerplate.board.domain.Comment;
 import com.jinsim.springboilerplate.board.domain.Post;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentListResDto {
 
-    private Long postId;
-    private List<SingleComment> comments;
-    private Integer count;
-
     @Getter
-    public static class SingleComment{
-        private Long writerId;
-        private String content;
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class Post {
 
-        public SingleComment(Long writerId, String content) {
-            this.writerId = writerId;
-            this.content = content;
+        private Long postId;
+        private List<SingleComment> comments;
+        private Integer count;
+
+        @Getter
+        public static class SingleComment{
+            private Long writerId;
+            private String content;
+
+            public SingleComment(Long writerId, String content) {
+                this.writerId = writerId;
+                this.content = content;
+            }
+
+            public static SingleComment of(Comment comment) {
+                return new SingleComment(comment.getWriter().getId(), comment.getContent());
+            }
         }
 
-        public static SingleComment of(Comment comment) {
-            return new SingleComment(comment.getWriter().getId(), comment.getContent());
+        public static CommentListResDto.Post of(Long postId, List<Comment> commentList) {
+            return CommentListResDto.Post.builder()
+                    .postId(postId)
+                    .comments(commentList.stream().map(SingleComment::of).collect(Collectors.toList()))
+                    .count(commentList.size())
+                    .build();
         }
     }
 
-    public static CommentListResDto of(Long postId, List<Comment> commentList) {
-        return CommentListResDto.builder()
-                .postId(postId)
-                .comments(commentList.stream().map(SingleComment::of).collect(Collectors.toList()))
-                .count(commentList.size())
-                .build();
+    @Getter
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class Account {
+
+        private Long writerId;
+        private List<SingleComment> comments;
+        private Integer count;
+
+        @Getter
+        public static class SingleComment {
+            private Long postId;
+            private String content;
+
+            public SingleComment(Long postId, String content) {
+                this.postId = postId;
+                this.content = content;
+            }
+
+            public static SingleComment of(Comment comment) {
+                return new SingleComment(comment.getPost().getId(), comment.getContent());
+            }
+        }
+
+        public static CommentListResDto.Account of(Long writerId, List<Comment> commentList) {
+            return CommentListResDto.Account.builder()
+                    .writerId(writerId)
+                    .comments(commentList.stream().map(SingleComment::of).collect(Collectors.toList()))
+                    .count(commentList.size())
+                    .build();
+        }
     }
 }
