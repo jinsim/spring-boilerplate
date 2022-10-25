@@ -43,7 +43,7 @@ public class CommentController {
         return CommentListResDto.of(postId, commentList);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() and (( @commentService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
     public CommentResDto updateComment(@PathVariable final Long postId, @PathVariable final Long id,
@@ -51,6 +51,13 @@ public class CommentController {
         commentService.update(reqDto, id);
         Comment comment = commentService.findById(id);
         return CommentResDto.of(comment);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and (( @commentService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteComment(@PathVariable final Long postId, @PathVariable final Long id) {
+        commentService.delete(id);
     }
 
 }

@@ -51,4 +51,9 @@ public class CommentService {
         comment.updateComment(reqDto.getContent());
     }
 
+    public void delete(Long id) {
+        Comment comment = findById(id);
+        commentRepository.delete(comment);
+    }
+
 }
