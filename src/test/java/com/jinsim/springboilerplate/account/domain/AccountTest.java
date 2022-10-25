@@ -1,6 +1,6 @@
 package com.jinsim.springboilerplate.account.domain;
 
-import org.assertj.core.api.Assertions;
+import com.jinsim.springboilerplate.domain.account.domain.Account;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

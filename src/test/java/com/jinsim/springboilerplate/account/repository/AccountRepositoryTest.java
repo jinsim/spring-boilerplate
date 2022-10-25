@@ -1,6 +1,7 @@
 package com.jinsim.springboilerplate.account.repository;
 
-import com.jinsim.springboilerplate.account.domain.Account;
+import com.jinsim.springboilerplate.domain.account.domain.Account;
+import com.jinsim.springboilerplate.domain.account.repository.AccountRepository;
 import com.jinsim.springboilerplate.global.test.RepositoryTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
