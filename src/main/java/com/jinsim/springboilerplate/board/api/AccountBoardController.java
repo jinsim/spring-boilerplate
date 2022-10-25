@@ -4,10 +4,7 @@ import com.jinsim.springboilerplate.account.domain.Account;
 import com.jinsim.springboilerplate.account.service.AuthUser;
 import com.jinsim.springboilerplate.board.domain.Comment;
 import com.jinsim.springboilerplate.board.domain.Post;
-import com.jinsim.springboilerplate.board.dto.CommentListResDto;
-import com.jinsim.springboilerplate.board.dto.CommentReqDto;
-import com.jinsim.springboilerplate.board.dto.PostReqDto;
-import com.jinsim.springboilerplate.board.dto.PostResDto;
+import com.jinsim.springboilerplate.board.dto.*;
 import com.jinsim.springboilerplate.board.service.CommentService;
 import com.jinsim.springboilerplate.board.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ import java.util.List;
 public class AccountBoardController {
 
     private final CommentService commentService;
+    private final PostService postService;
 
     @GetMapping("/comments")
     @PreAuthorize("isAuthenticated() and (( @accountService.findById(#accountId).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
@@ -33,5 +31,13 @@ public class AccountBoardController {
     public CommentListResDto.Account getAccountComments(@PathVariable final Long accountId, @AuthUser Account account) {
         List<Comment> commentList = commentService.findByWriter(account);
         return CommentListResDto.Account.of(accountId, commentList);
+    }
+
+    @GetMapping("/posts")
+    @PreAuthorize("isAuthenticated() and (( @accountService.findById(#accountId).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @ResponseStatus(value = HttpStatus.OK)
+    public PostListResDto getAccountPosts(@PathVariable final Long accountId, @AuthUser Account account) {
+        List<Post> postList = postService.findByWriter(account);
+        return PostListResDto.of(postList);
     }
 }
