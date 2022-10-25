@@ -30,7 +30,7 @@ public class AccountBoardController {
     @ResponseStatus(value = HttpStatus.OK)
     public CommentListResDto.Account getAccountComments(@PathVariable final Long accountId, @AuthUser Account account) {
         List<Comment> commentList = commentService.findByWriter(account);
-        return CommentListResDto.Account.of(accountId, commentList);
+        return CommentListResDto.Account.of(account.getName(), commentList);
     }
 
     @GetMapping("/posts")

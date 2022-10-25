@@ -13,11 +13,13 @@ public class PostResDto {
 
     private String title;
     private String content;
+    private String writerName;
 
     public static PostResDto of(Post post) {
         return PostResDto.builder()
                 .title(post.getTitle())
                 .content(post.getContent())
+                .writerName(post.getWriter().getName())
                 .build();
     }
 }

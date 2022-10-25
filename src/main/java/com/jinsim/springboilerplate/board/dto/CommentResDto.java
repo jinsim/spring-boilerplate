@@ -13,13 +13,13 @@ import lombok.Getter;
 public class CommentResDto {
 
     private Long postId;
-    private Long writerId;
+    private String writerName;
     private String content;
 
     public static CommentResDto of(Comment comment) {
         return CommentResDto.builder()
                 .postId(comment.getPost().getId())
-                .writerId(comment.getWriter().getId())
+                .writerName(comment.getWriter().getName())
                 .content(comment.getContent())
                 .build();
     }

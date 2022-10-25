@@ -20,16 +20,16 @@ public class CommentListResDto {
 
         @Getter
         public static class SingleComment{
-            private Long writerId;
+            private String writerName;
             private String content;
 
-            public SingleComment(Long writerId, String content) {
-                this.writerId = writerId;
+            public SingleComment(String writerName, String content) {
+                this.writerName = writerName;
                 this.content = content;
             }
 
             public static SingleComment of(Comment comment) {
-                return new SingleComment(comment.getWriter().getId(), comment.getContent());
+                return new SingleComment(comment.getWriter().getName(), comment.getContent());
             }
         }
 
@@ -47,7 +47,7 @@ public class CommentListResDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Account {
 
-        private Long writerId;
+        private String writerName;
         private List<SingleComment> comments;
         private Integer count;
 
@@ -66,9 +66,9 @@ public class CommentListResDto {
             }
         }
 
-        public static CommentListResDto.Account of(Long writerId, List<Comment> commentList) {
+        public static CommentListResDto.Account of(String writerName, List<Comment> commentList) {
             return CommentListResDto.Account.builder()
-                    .writerId(writerId)
+                    .writerName(writerName)
                     .comments(commentList.stream().map(SingleComment::of).collect(Collectors.toList()))
                     .count(commentList.size())
                     .build();

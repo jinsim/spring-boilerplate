@@ -20,18 +20,18 @@ public class PostListResDto {
 
         private Long postId;
         private String title;
-        private Long writerId;
+        private String writerName;
         private Integer commentsCount;
 
-        public SinglePost(Long postId, String title, Long writerId, Integer commentsCount) {
+        public SinglePost(Long postId, String title, String writerName, Integer commentsCount) {
             this.postId = postId;
             this.title = title;
-            this.writerId = writerId;
+            this.writerName = writerName;
             this.commentsCount = commentsCount;
         }
 
         public static SinglePost of(Post post) {
-            return new SinglePost(post.getId(), post.getTitle(), post.getWriter().getId(), post.getCommentList().size());
+            return new SinglePost(post.getId(), post.getTitle(), post.getWriter().getName(), post.getCommentList().size());
         }
     }
 
