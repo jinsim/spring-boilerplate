@@ -1,6 +1,7 @@
 package com.jinsim.springboilerplate.domain.board.domain;
 
 import com.jinsim.springboilerplate.domain.account.domain.Account;
+import com.jinsim.springboilerplate.global.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA에서는 프록시를 생성을 위해서 반드시 기본 생성자 하나를 생성해야한다.
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

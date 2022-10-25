@@ -1,6 +1,5 @@
 package com.jinsim.springboilerplate.domain.account.api;
 
-import com.jinsim.springboilerplate.account.dto.*;
 import com.jinsim.springboilerplate.domain.account.dto.AccessTokenDto;
 import com.jinsim.springboilerplate.domain.account.dto.SignInReqDto;
 import com.jinsim.springboilerplate.domain.account.dto.SignInResDto;

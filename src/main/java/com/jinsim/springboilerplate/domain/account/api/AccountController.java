@@ -1,7 +1,6 @@
 package com.jinsim.springboilerplate.domain.account.api;
 
 import com.jinsim.springboilerplate.domain.account.domain.Account;
-import com.jinsim.springboilerplate.account.dto.*;
 import com.jinsim.springboilerplate.domain.account.dto.SignUpReqDto;
 import com.jinsim.springboilerplate.domain.account.service.AccountService;
 import com.jinsim.springboilerplate.domain.account.dto.MyAccountResDto;

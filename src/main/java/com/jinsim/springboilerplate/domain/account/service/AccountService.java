@@ -1,7 +1,6 @@
 package com.jinsim.springboilerplate.domain.account.service;
 
 import com.jinsim.springboilerplate.domain.account.domain.Account;
-import com.jinsim.springboilerplate.account.dto.*;
 import com.jinsim.springboilerplate.domain.account.dto.*;
 import com.jinsim.springboilerplate.domain.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.domain.account.exception.EmailDuplicationException;

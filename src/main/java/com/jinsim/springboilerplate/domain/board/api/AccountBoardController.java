@@ -4,7 +4,6 @@ import com.jinsim.springboilerplate.domain.account.domain.Account;
 import com.jinsim.springboilerplate.domain.account.service.AuthUser;
 import com.jinsim.springboilerplate.domain.board.domain.Comment;
 import com.jinsim.springboilerplate.domain.board.domain.Post;
-import com.jinsim.springboilerplate.board.dto.*;
 import com.jinsim.springboilerplate.domain.board.service.CommentService;
 import com.jinsim.springboilerplate.domain.board.service.PostService;
 import com.jinsim.springboilerplate.domain.board.dto.CommentListResDto;
