@@ -43,4 +43,14 @@ public class CommentController {
         return CommentListResDto.of(postId, commentList);
     }
 
+    @PutMapping("{id}")
+    @PreAuthorize("isAuthenticated() and (( @commentService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @ResponseStatus(value = HttpStatus.OK)
+    public CommentResDto updateComment(@PathVariable final Long postId, @PathVariable final Long id,
+                                       @RequestBody @Valid final CommentReqDto.Update reqDto) {
+        commentService.update(reqDto, id);
+        Comment comment = commentService.findById(id);
+        return CommentResDto.of(comment);
+    }
+
 }

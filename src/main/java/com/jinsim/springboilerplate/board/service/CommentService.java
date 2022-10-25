@@ -46,4 +46,9 @@ public class CommentService {
         return comment.getId();
     }
 
+    public void update(CommentReqDto.Update reqDto, Long id) {
+        Comment comment = findById(id);
+        comment.updateComment(reqDto.getContent());
+    }
+
 }
