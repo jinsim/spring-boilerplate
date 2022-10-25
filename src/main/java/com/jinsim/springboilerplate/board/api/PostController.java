@@ -4,6 +4,7 @@ import com.jinsim.springboilerplate.account.domain.Account;
 import com.jinsim.springboilerplate.account.service.AccountService;
 import com.jinsim.springboilerplate.account.service.AuthUser;
 import com.jinsim.springboilerplate.board.domain.Post;
+import com.jinsim.springboilerplate.board.dto.PostListResDto;
 import com.jinsim.springboilerplate.board.dto.PostReqDto;
 import com.jinsim.springboilerplate.board.dto.PostResDto;
 import com.jinsim.springboilerplate.board.service.PostService;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,7 +28,7 @@ public class PostController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public PostResDto create(@RequestBody @Valid final PostReqDto.Create reqDto,
+    public PostResDto createPost(@RequestBody @Valid final PostReqDto.Create reqDto,
                              @AuthUser Account account) {
         Long postId = postService.create(reqDto, account);
         Post post = postService.findById(postId);
@@ -35,15 +37,22 @@ public class PostController {
 
     @GetMapping(("/{id}"))
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto read(@PathVariable final Long id) {
+    public PostResDto readPost(@PathVariable final Long id) {
         Post post = postService.findById(id);
         return PostResDto.of(post);
+    }
+
+    @GetMapping
+    @ResponseStatus(value = HttpStatus.OK)
+    public PostListResDto readPostList() {
+        List<Post> postList = postService.findAllDesc();
+        return PostListResDto.of(postList);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() and (( @postService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto update(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto) {
+    public PostResDto updatePost(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto) {
         postService.update(id, reqDto);
         Post post = postService.findById(id);
         return PostResDto.of(post);
@@ -52,7 +61,7 @@ public class PostController {
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated() and (( @postService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable final Long id) {
+    public void deletePost(@PathVariable final Long id) {
         postService.delete(id);
     }
 }

@@ -12,7 +12,6 @@ public class CommentListResDto {
     @Getter
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Post {
 
         private Long postId;
@@ -46,7 +45,6 @@ public class CommentListResDto {
     @Getter
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Account {
 
         private Long writerId;
