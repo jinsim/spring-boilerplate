@@ -3,6 +3,7 @@ package com.jinsim.springboilerplate.domain.board.dto;
 import com.jinsim.springboilerplate.domain.board.domain.Comment;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,14 +22,18 @@ public class CommentListResDto {
         public static class SingleComment{
             private String writerName;
             private String content;
+            private LocalDateTime createDate;
+            private LocalDateTime modifiedDate;
 
-            public SingleComment(String writerName, String content) {
-                this.writerName = writerName;
-                this.content = content;
+            public SingleComment(Comment comment) {
+                this.writerName = comment.getWriter().getName();
+                this.content = comment.getContent();
+                this.createDate = comment.getCreateDate();
+                this.modifiedDate = comment.getModifiedDate();
             }
 
             public static SingleComment of(Comment comment) {
-                return new SingleComment(comment.getWriter().getName(), comment.getContent());
+                return new SingleComment(comment);
             }
         }
 
@@ -53,15 +58,21 @@ public class CommentListResDto {
         @Getter
         public static class SingleComment {
             private Long postId;
+            private String postTitle;
             private String content;
+            private LocalDateTime createDate;
+            private LocalDateTime modifiedDate;
 
-            public SingleComment(Long postId, String content) {
-                this.postId = postId;
-                this.content = content;
+            public SingleComment(Comment comment) {
+                this.postId = comment.getPost().getId();
+                this.postTitle = comment.getPost().getTitle();
+                this.content = comment.getContent();
+                this.createDate = comment.getCreateDate();
+                this.modifiedDate = comment.getModifiedDate();
             }
 
             public static SingleComment of(Comment comment) {
-                return new SingleComment(comment.getPost().getId(), comment.getContent());
+                return new SingleComment(comment);
             }
         }
 

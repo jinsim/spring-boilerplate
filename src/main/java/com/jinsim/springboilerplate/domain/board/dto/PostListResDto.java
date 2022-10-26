@@ -1,8 +1,10 @@
 package com.jinsim.springboilerplate.domain.board.dto;
 
+import com.jinsim.springboilerplate.domain.board.domain.Comment;
 import com.jinsim.springboilerplate.domain.board.domain.Post;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,16 +23,21 @@ public class PostListResDto {
         private String title;
         private String writerName;
         private Integer commentsCount;
+        private LocalDateTime createDate;
+        private LocalDateTime modifiedDate;
 
-        public SinglePost(Long postId, String title, String writerName, Integer commentsCount) {
-            this.postId = postId;
-            this.title = title;
-            this.writerName = writerName;
-            this.commentsCount = commentsCount;
+        public SinglePost(Post post) {
+            this.postId = post.getId();
+            this.title = post.getTitle();
+            this.writerName = post.getWriter().getName();
+            this.commentsCount = post.getCommentList().size();
+            this.createDate = post.getCreateDate();
+            this.modifiedDate = post.getModifiedDate();
+
         }
 
         public static SinglePost of(Post post) {
-            return new SinglePost(post.getId(), post.getTitle(), post.getWriter().getName(), post.getCommentList().size());
+            return new SinglePost(post);
         }
     }
 
