@@ -23,6 +23,7 @@ public class PostListResDto {
         private String title;
         private String writerName;
         private Integer commentsCount;
+        private Integer viewCount;
         private LocalDateTime createDate;
         private LocalDateTime modifiedDate;
 
@@ -31,6 +32,7 @@ public class PostListResDto {
             this.title = post.getTitle();
             this.writerName = post.getWriter().getName();
             this.commentsCount = post.getCommentList().size();
+            this.viewCount = post.getViewCount();
             this.createDate = post.getCreateDate();
             this.modifiedDate = post.getModifiedDate();
 

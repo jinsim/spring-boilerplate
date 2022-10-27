@@ -28,7 +28,6 @@ public abstract class BaseTimeEntity {
     // Entity가 생성되어 저장될 때 시간이 자동 저장된다.
     @Column(updatable = false)
     // update 시에 Null 되는 경우 방지
-    // @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     private LocalDateTime createDate;
 
     @LastModifiedDate

@@ -16,6 +16,7 @@ public class PostResDto {
     private String title;
     private String content;
     private String writerName;
+    private Integer viewCount;
     private LocalDateTime createDate;
     private LocalDateTime modifiedDate;
 
@@ -24,6 +25,7 @@ public class PostResDto {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .writerName(post.getWriter().getName())
+                .viewCount(post.getViewCount())
                 .createDate(post.getCreateDate())
                 .modifiedDate(post.getModifiedDate())
                 .build();

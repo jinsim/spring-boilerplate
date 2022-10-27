@@ -38,6 +38,7 @@ public class PostController {
     @ResponseStatus(value = HttpStatus.OK)
     public PostResDto readPost(@PathVariable final Long id) {
         Post post = postService.findById(id);
+        post.updateViewCount();
         return PostResDto.of(post);
     }
 
