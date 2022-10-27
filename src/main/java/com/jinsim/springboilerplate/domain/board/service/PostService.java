@@ -25,8 +25,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Post findById(Long id) {
-        return postRepository.findById(id)
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
     }
 
@@ -44,6 +44,11 @@ public class PostService {
     public Long create(PostReqDto.Create reqDto, Account account) {
         Post post = postRepository.save(reqDto.toEntity(account));
         return post.getId();
+    }
+
+    public void read(Long postId) {
+        Post post = findById(postId);
+        post.updateViewCount();
     }
 
     public void update(Long postId, PostReqDto.Update reqDto) {

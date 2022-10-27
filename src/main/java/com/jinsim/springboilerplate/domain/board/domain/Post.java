@@ -36,7 +36,7 @@ public class Post extends BaseTimeEntity {
     // post에만 persist 하면 되고, post만 삭제하면 댓글도 다 삭제된다.
     private List<Comment> commentList = new ArrayList<>();
 
-    @Column(columnDefinition = "integer default 0")
+//    @Column(columnDefinition = "integer default 0")
     private Integer viewCount;
 
     /**

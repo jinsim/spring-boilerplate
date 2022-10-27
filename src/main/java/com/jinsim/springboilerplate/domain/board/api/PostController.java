@@ -34,11 +34,11 @@ public class PostController {
         return PostResDto.of(post);
     }
 
-    @GetMapping(("/{id}"))
+    @GetMapping(("/{postId}"))
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto readPost(@PathVariable final Long id) {
-        Post post = postService.findById(id);
-        post.updateViewCount();
+    public PostResDto readPost(@PathVariable final Long postId) {
+        postService.read(postId);
+        Post post = postService.findById(postId);
         return PostResDto.of(post);
     }
 
@@ -49,19 +49,19 @@ public class PostController {
         return PostListResDto.of(postList);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and (( @postService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @PutMapping("/{postId}")
+    @PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto updatePost(@PathVariable final Long id, @RequestBody final PostReqDto.Update reqDto) {
-        postService.update(id, reqDto);
-        Post post = postService.findById(id);
+    public PostResDto updatePost(@PathVariable final Long postId, @RequestBody final PostReqDto.Update reqDto) {
+        postService.update(postId, reqDto);
+        Post post = postService.findById(postId);
         return PostResDto.of(post);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and (( @postService.findById(#id).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @DeleteMapping("/{postId}")
+    @PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deletePost(@PathVariable final Long id) {
-        postService.delete(id);
+    public void deletePost(@PathVariable final Long postId) {
+        postService.delete(postId);
     }
 }
