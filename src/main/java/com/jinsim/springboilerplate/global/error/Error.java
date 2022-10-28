@@ -8,7 +8,10 @@ public enum Error {
     EMAIL_DUPLICATION("중복된 이메일입니다."),
     ACCOUNT_NOT_FOUND("계정을 찾을 수 없습니다."),
     INVALID_TOKEN("올바르지 않은 Token 입니다."),
-    REFRESH_TOKEN_NOT_FOUND("이미 로그아웃된 사용자입니다.");
+    REFRESH_TOKEN_NOT_FOUND("이미 로그아웃된 사용자입니다."),
+
+    POST_NOT_FOUND("게시글을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND("댓글을 찾을 수 없습니다.");
 
     private final String message;
 

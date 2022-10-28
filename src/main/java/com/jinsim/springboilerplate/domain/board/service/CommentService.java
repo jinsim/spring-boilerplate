@@ -1,9 +1,11 @@
 package com.jinsim.springboilerplate.domain.board.service;
 
 import com.jinsim.springboilerplate.domain.account.domain.Account;
+import com.jinsim.springboilerplate.domain.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.domain.board.domain.Comment;
 import com.jinsim.springboilerplate.domain.board.domain.Post;
 import com.jinsim.springboilerplate.domain.board.dto.CommentReqDto;
+import com.jinsim.springboilerplate.domain.board.exception.CommentNotFoundException;
 import com.jinsim.springboilerplate.domain.board.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +25,9 @@ public class CommentService {
     private final PostService postService;
 
     @Transactional(readOnly = true)
-    public Comment findById(Long id) {
-        return commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+    public Comment findById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("commentId", commentId));
     }
 
     @Transactional(readOnly = true)
@@ -45,13 +47,13 @@ public class CommentService {
         return comment.getId();
     }
 
-    public void update(CommentReqDto.Update reqDto, Long id) {
-        Comment comment = findById(id);
+    public void update(CommentReqDto.Update reqDto, Long commentId) {
+        Comment comment = findById(commentId);
         comment.updateComment(reqDto.getContent());
     }
 
-    public void delete(Long id) {
-        Comment comment = findById(id);
+    public void delete(Long commentId) {
+        Comment comment = findById(commentId);
         commentRepository.delete(comment);
     }
 

@@ -3,6 +3,7 @@ package com.jinsim.springboilerplate.domain.board.service;
 import com.jinsim.springboilerplate.domain.account.domain.Account;
 import com.jinsim.springboilerplate.domain.board.domain.Post;
 import com.jinsim.springboilerplate.domain.board.dto.PostReqDto;
+import com.jinsim.springboilerplate.domain.board.exception.PostNotFoundException;
 import com.jinsim.springboilerplate.domain.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Post findById(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new PostNotFoundException("id", postId));
     }
 
     @Transactional(readOnly = true)

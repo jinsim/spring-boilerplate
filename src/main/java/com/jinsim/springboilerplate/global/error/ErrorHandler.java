@@ -2,6 +2,8 @@ package com.jinsim.springboilerplate.global.error;
 
 import com.jinsim.springboilerplate.domain.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.domain.account.exception.EmailDuplicationException;
+import com.jinsim.springboilerplate.domain.board.exception.CommentNotFoundException;
+import com.jinsim.springboilerplate.domain.board.exception.PostNotFoundException;
 import com.jinsim.springboilerplate.global.jwt.exception.InvalidTokenException;
 import com.jinsim.springboilerplate.global.redis.exception.RefreshTokenNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,7 @@ public class ErrorHandler {
         return buildFieldErrors(error, fieldErrors);
     }
 
-    @ExceptionHandler(AccountNotFoundException.class)
+    @ExceptionHandler({AccountNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse handleAccountNotFoundException(AccountNotFoundException e) {
         final Error error = Error.ACCOUNT_NOT_FOUND;
@@ -61,6 +63,24 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse handleRefreshTokenNotFoundException(RefreshTokenNotFoundException e) {
         final Error error = Error.REFRESH_TOKEN_NOT_FOUND;
+        log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
+        List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
+        return buildFieldErrors(error, fieldError);
+    }
+
+    @ExceptionHandler({PostNotFoundException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handlePostNotFoundException(PostNotFoundException e) {
+        final Error error = Error.POST_NOT_FOUND;
+        log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
+        List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
+        return buildFieldErrors(error, fieldError);
+    }
+
+    @ExceptionHandler({CommentNotFoundException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleCommentNotFoundException(CommentNotFoundException e) {
+        final Error error = Error.COMMENT_NOT_FOUND;
         log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
         List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
         return buildFieldErrors(error, fieldError);
