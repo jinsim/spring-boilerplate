@@ -57,4 +57,22 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
+    // 연관관계 편의 메소드를 사용한 코드
+    @Transactional(readOnly = true)
+    public List<Comment> findByPostObj(Long postId) {
+        Post post = postService.findById(postId);
+        List<Comment> commentList = post.getCommentList();
+        log.info("post.getCommentList = {}", commentList);
+        return commentList;
+    }
+
+    public Long createObj(CommentReqDto.Create reqDto, Long postId, Account account) {
+        Post post = postService.findById(postId);
+        Comment comment = commentRepository.save(reqDto.toEntity(post, account));
+        post.addComment(comment);
+        return comment.getId();
+    }
+
+
+
 }

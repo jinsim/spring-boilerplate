@@ -34,7 +34,7 @@ public class PostController {
         return PostResDto.of(post);
     }
 
-    @GetMapping(("/{postId}"))
+    @GetMapping("/{postId}")
     @ResponseStatus(value = HttpStatus.OK)
     public PostResDto readPost(@PathVariable final Long postId) {
         postService.read(postId);

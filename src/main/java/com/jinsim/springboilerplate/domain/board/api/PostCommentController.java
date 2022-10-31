@@ -42,4 +42,24 @@ public class PostCommentController {
         List<Comment> commentList = commentService.findByPost(postId);
         return CommentListResDto.Post.of(postId, commentList);
     }
+
+    // 연관관계 편의 메소드로 작성한 코드
+    @PostMapping("/obj")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public CommentResDto createCommentObj(@PathVariable final Long postId, @RequestBody @Valid final CommentReqDto.Create reqDto,
+                                       @AuthUser Account account) {
+
+        Long commentId = commentService.createObj(reqDto, postId, account);
+        Comment comment = commentService.findById(commentId);
+        return CommentResDto.of(comment);
+    }
+
+    @GetMapping("/obj")
+    @ResponseStatus(value = HttpStatus.OK)
+    public CommentListResDto.Post readCommentListObj(@PathVariable final Long postId) {
+
+        List<Comment> commentList = commentService.findByPostObj(postId);
+        return CommentListResDto.Post.of(postId, commentList);
+    }
 }
