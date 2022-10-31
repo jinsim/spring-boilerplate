@@ -31,7 +31,7 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "게시글은 필수로 입력되어야 합니다.")
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", updatable = false)
     private Post post;
 
 

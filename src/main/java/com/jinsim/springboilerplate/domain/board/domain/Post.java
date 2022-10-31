@@ -34,6 +34,7 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     // post에만 persist 하면 되고, post만 삭제하면 댓글도 다 삭제된다.
+    // 꼭 필요한가?
     private List<Comment> commentList = new ArrayList<>();
 
 //    @Column(columnDefinition = "integer default 0")
