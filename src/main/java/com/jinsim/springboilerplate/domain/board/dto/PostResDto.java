@@ -18,7 +18,7 @@ public class PostResDto {
     private String writerName;
     private Integer viewCount;
     private Integer likeCount;
-    private Boolean likeCheck;
+    private Boolean isLiked;
     private LocalDateTime createDate;
     private LocalDateTime modifiedDate;
 
@@ -33,7 +33,9 @@ public class PostResDto {
                 .build();
     }
 
-    public void setLike(Integer likeCount) {
+    public void setLike(Integer likeCount, boolean isLiked) {
         this.likeCount = likeCount;
+        this.isLiked = isLiked;
+
     }
 }

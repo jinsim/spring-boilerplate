@@ -25,6 +25,11 @@ public class PostLikeService {
     private final PostService postService;
 
     @Transactional(readOnly = true)
+    public boolean isExistsByWriterAndPost(Account account, Post post) {
+        return postLikeRepository.existsByWriterAndPost(account, post);
+    }
+
+    @Transactional(readOnly = true)
     public Integer countPostLike(Post post) {
         Integer count = postLikeRepository.countByPost(post);
         return count;
@@ -32,12 +37,9 @@ public class PostLikeService {
 
     public void create(Long postId, Account account) {
         Post post = postService.findById(postId);
-        log.error("이거 뭐냐 = {}", postLikeRepository.existsByWriterAndPost(account, post));
-        if (postLikeRepository.existsByWriterAndPost(account, post)) {
-            log.error("에러 호출");
+        if (isExistsByWriterAndPost(account, post)) {
             throw new PostLikeException("이미 좋아요 처리되었습니다.", "post");
         }
-        log.error("밑에 호출");
         PostLike postLike = PostLike.builder()
                 .post(post)
                 .account(account)

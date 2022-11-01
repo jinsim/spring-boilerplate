@@ -34,21 +34,25 @@ public class PostController {
         Long postId = postService.create(reqDto, account);
         Post post = postService.findById(postId);
         Integer likeCount = postLikeService.countPostLike(post);
+        boolean isLiked = postLikeService.isExistsByWriterAndPost(account, post);
 
         PostResDto resDto = PostResDto.of(post);
-        resDto.setLike(likeCount);
+
+        resDto.setLike(likeCount, isLiked);
         return resDto;
     }
 
     @GetMapping("/{postId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto readPost(@PathVariable final Long postId) {
+    public PostResDto readPost(@PathVariable final Long postId, @AuthUser Account account) {
         postService.read(postId);
         Post post = postService.findById(postId);
         Integer likeCount = postLikeService.countPostLike(post);
+        // 인증이 안된 유저인 경우, account에 null이 들어간다.
+        boolean isLiked = postLikeService.isExistsByWriterAndPost(account, post);
 
         PostResDto resDto = PostResDto.of(post);
-        resDto.setLike(likeCount);
+        resDto.setLike(likeCount, isLiked);
         return resDto;
     }
 
