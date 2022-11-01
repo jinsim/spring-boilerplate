@@ -6,6 +6,7 @@ import com.jinsim.springboilerplate.domain.board.domain.Post;
 import com.jinsim.springboilerplate.domain.board.dto.PostListResDto;
 import com.jinsim.springboilerplate.domain.board.dto.PostReqDto;
 import com.jinsim.springboilerplate.domain.board.dto.PostResDto;
+import com.jinsim.springboilerplate.domain.board.service.PostLikeService;
 import com.jinsim.springboilerplate.domain.board.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -31,7 +33,7 @@ public class PostController {
                                  @AuthUser Account account) {
         Long postId = postService.create(reqDto, account);
         Post post = postService.findById(postId);
-        Integer likeCount = postService.countPostLike(post);
+        Integer likeCount = postLikeService.countPostLike(post);
 
         PostResDto resDto = PostResDto.of(post);
         resDto.setLike(likeCount);
@@ -43,7 +45,7 @@ public class PostController {
     public PostResDto readPost(@PathVariable final Long postId) {
         postService.read(postId);
         Post post = postService.findById(postId);
-        Integer likeCount = postService.countPostLike(post);
+        Integer likeCount = postLikeService.countPostLike(post);
 
         PostResDto resDto = PostResDto.of(post);
         resDto.setLike(likeCount);
@@ -71,5 +73,19 @@ public class PostController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deletePost(@PathVariable final Long postId) {
         postService.delete(postId);
+    }
+
+    @PostMapping("/{postId}/like")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void createPostLike(@PathVariable final Long postId, @AuthUser Account account) {
+        postLikeService.create(postId, account);
+    }
+
+    @DeleteMapping("/{postId}/like")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deletePostLike(@PathVariable final Long postId, @AuthUser Account account) {
+        postLikeService.delete(postId, account);
     }
 }
