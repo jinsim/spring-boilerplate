@@ -30,15 +30,15 @@ public class ErrorResponse {
     @Getter
     public static class FieldError {
         private String field;
-        private String message;
         // 여러 타입을 받을 수 있도록 Object로 설정
         private Object value;
+        private String message;
 
         @Builder
-        public FieldError(String field, String message, Object value) {
+        public FieldError(String field, Object value, String message) {
             this.field = field;
-            this.message = message;
             this.value = value;
+            this.message = message;
         }
     }
 }

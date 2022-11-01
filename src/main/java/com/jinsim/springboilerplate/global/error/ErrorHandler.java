@@ -3,6 +3,7 @@ package com.jinsim.springboilerplate.global.error;
 import com.jinsim.springboilerplate.domain.account.exception.AccountNotFoundException;
 import com.jinsim.springboilerplate.domain.account.exception.EmailDuplicationException;
 import com.jinsim.springboilerplate.domain.board.exception.CommentNotFoundException;
+import com.jinsim.springboilerplate.domain.board.exception.PostLikeException;
 import com.jinsim.springboilerplate.domain.board.exception.PostNotFoundException;
 import com.jinsim.springboilerplate.global.jwt.exception.InvalidTokenException;
 import com.jinsim.springboilerplate.global.redis.exception.RefreshTokenNotFoundException;
@@ -83,6 +84,15 @@ public class ErrorHandler {
         final Error error = Error.COMMENT_NOT_FOUND;
         log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
         List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
+        return buildFieldErrors(error, fieldError);
+    }
+
+    @ExceptionHandler({PostLikeException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handlePostLikeException(PostLikeException e) {
+        final Error error = Error.POST_LIKE_ERROR;
+        log.error("{} {} : {}", error.getMessage(), e.getField(), e.getValue());
+        List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue(), e.getMessage());
         return buildFieldErrors(error, fieldError);
     }
 
