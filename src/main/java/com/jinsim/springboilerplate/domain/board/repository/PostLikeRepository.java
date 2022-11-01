@@ -12,5 +12,6 @@ public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
     Integer countByPost(Post post);
     List<PostLike> findAllByWriter(Account account);
+    boolean existsByWriterAndPost(Account account, Post post);
     Optional<PostLike> findByWriterAndPost(Account account, Post post);
 }

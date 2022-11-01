@@ -20,7 +20,6 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
 
     @Transactional(readOnly = true)
     public List<Post> findAllDesc() {
@@ -62,12 +61,6 @@ public class PostService {
     public void delete(Long postId) {
         Post post = findById(postId);
         postRepository.delete(post);
-    }
-
-    @Transactional(readOnly = true)
-    public Integer countPostLike(Post post) {
-        Integer count = postLikeRepository.countByPost(post);
-        return count;
     }
 
 }
