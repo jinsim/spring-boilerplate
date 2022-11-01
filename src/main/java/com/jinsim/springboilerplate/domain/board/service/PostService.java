@@ -50,7 +50,7 @@ public class PostService {
 
     public void read(Long postId) {
         Post post = findById(postId);
-        post.updateViewCount();
+        postRepository.updateViewCount(postId);
     }
 
     public void update(Long postId, PostReqDto.Update reqDto) {

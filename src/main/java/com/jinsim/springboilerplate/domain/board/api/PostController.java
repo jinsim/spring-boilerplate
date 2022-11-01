@@ -66,10 +66,19 @@ public class PostController {
     @PutMapping("/{postId}")
     @PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResDto updatePost(@PathVariable final Long postId, @RequestBody final PostReqDto.Update reqDto) {
+    public PostResDto updatePost(@PathVariable final Long postId, @RequestBody final PostReqDto.Update reqDto
+                                ,@AuthUser Account account) {
         postService.update(postId, reqDto);
         Post post = postService.findById(postId);
-        return PostResDto.of(post);
+
+        Integer likeCount = postLikeService.countPostLike(post);
+        boolean isLiked = postLikeService.isExistsByWriterAndPost(account, post);
+
+        PostResDto resDto = PostResDto.of(post);
+
+        resDto.setLike(likeCount, isLiked);
+
+        return resDto;
     }
 
     @DeleteMapping("/{postId}")

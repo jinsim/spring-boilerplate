@@ -26,11 +26,12 @@ public abstract class BaseTimeEntity {
 
     @CreatedDate
     // Entity가 생성되어 저장될 때 시간이 자동 저장된다.
-    @Column(updatable = false)
+    @Column(updatable = false) // 해당 컬럼은 수정되지 않는다는 의미
     // update 시에 Null 되는 경우 방지
     private LocalDateTime createDate;
 
     @LastModifiedDate
+    @Column(insertable=false) // 해당 컬럼은 삽입에서 제외된다는 의미(DB Insert에서 제외). 삽입 시점에서는 비워져있어야하므로 false
     // 조회한 Entity의 값을 변경할 때 시간이 자동 저장된다.
     private LocalDateTime modifiedDate;
 }
