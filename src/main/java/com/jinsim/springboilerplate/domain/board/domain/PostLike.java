@@ -17,7 +17,7 @@ public class PostLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "post_like_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +31,7 @@ public class PostLike {
     private Account writer;
 
     @Builder
-    public Like(Post post, Account account) {
+    public PostLike(Post post, Account account) {
         this.post = post;
         this.writer = account;
     }

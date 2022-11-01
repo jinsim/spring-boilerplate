@@ -4,6 +4,7 @@ import com.jinsim.springboilerplate.domain.account.domain.Account;
 import com.jinsim.springboilerplate.domain.board.domain.Post;
 import com.jinsim.springboilerplate.domain.board.dto.PostReqDto;
 import com.jinsim.springboilerplate.domain.board.exception.PostNotFoundException;
+import com.jinsim.springboilerplate.domain.board.repository.PostLikeRepository;
 import com.jinsim.springboilerplate.domain.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Transactional(readOnly = true)
     public List<Post> findAllDesc() {
@@ -60,6 +62,12 @@ public class PostService {
     public void delete(Long postId) {
         Post post = findById(postId);
         postRepository.delete(post);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer countPostLike(Post post) {
+        Integer count = postLikeRepository.countByPost(post);
+        return count;
     }
 
 }

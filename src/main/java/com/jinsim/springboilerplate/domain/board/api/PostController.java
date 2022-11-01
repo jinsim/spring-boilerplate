@@ -31,7 +31,11 @@ public class PostController {
                                  @AuthUser Account account) {
         Long postId = postService.create(reqDto, account);
         Post post = postService.findById(postId);
-        return PostResDto.of(post);
+        Integer likeCount = postService.countPostLike(post);
+
+        PostResDto resDto = PostResDto.of(post);
+        resDto.setLike(likeCount);
+        return resDto;
     }
 
     @GetMapping("/{postId}")
@@ -39,7 +43,11 @@ public class PostController {
     public PostResDto readPost(@PathVariable final Long postId) {
         postService.read(postId);
         Post post = postService.findById(postId);
-        return PostResDto.of(post);
+        Integer likeCount = postService.countPostLike(post);
+
+        PostResDto resDto = PostResDto.of(post);
+        resDto.setLike(likeCount);
+        return resDto;
     }
 
     @GetMapping
