@@ -41,7 +41,8 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests() // URL 별로 자원에 대한 접근 권한 관리
-                .antMatchers("/", "/h2-console/**", "/accounts/**", "/token/**", "/posts/**", "/comments/**").permitAll()
+                .antMatchers("/", "/h2-console/**", "/accounts/**",
+                        "/token/**", "/posts/**", "/comments/**", "/swagger/**").permitAll()
                 .anyRequest().authenticated() // 나머지 요청은 권한 인증 사용자에게만 공개
 
                 .and()

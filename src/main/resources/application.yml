@@ -44,3 +44,23 @@ logging.level:
   # 파라미터를 출력한다. 다만 너무 길기 때문에, p6spy 라이프러리를 사용할 것이다.
   # org.hibernate.type: trace
 
+
+# springdoc swagger
+springdoc:
+  api-docs:
+    # JSON 제공 접속 path 설정
+    path: /swagger/docs
+
+  swagger-ui:
+    # UI 제공 접속 path 설정
+    path: /swagger/ui
+    # Try it out 시 Request Duration 표시
+    display-request-duration: true
+
+  cache:
+    # 캐시 비활성화 (로컬에서만 사용 권장)
+    disabled: true
+
+  # @ControllerAdvice 응답은 API 응답에 포함되지 않도록 설정
+  override-with-generic-response: false
+

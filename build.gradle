@@ -45,6 +45,12 @@ dependencies {
 	// Json 변환 라이브러리
 	implementation group: 'org.json', name: 'json', version: '20220320'
 
+	// Swagger
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.11'
+	// Spring Security를 사용하는 경우 추가. @AuthenticationPrincipal 무시해준다.
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-security', version: '1.6.11'
+
+
 }
 
 tasks.named('test') {
