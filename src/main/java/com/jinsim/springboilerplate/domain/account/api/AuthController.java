@@ -5,6 +5,11 @@ import com.jinsim.springboilerplate.domain.account.dto.SignInReqDto;
 import com.jinsim.springboilerplate.domain.account.dto.SignInResDto;
 import com.jinsim.springboilerplate.domain.account.dto.SignInTokenDto;
 import com.jinsim.springboilerplate.domain.account.service.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
@@ -16,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
+@Tag(name = "Auth API", description = "인증 API")
 @Slf4j
 @RestController
 @RequestMapping("/token")
@@ -24,6 +30,10 @@ public class AuthController {
 
     private final AccountService accountService;
 
+    @Operation(summary = "로그인", description = "Access Token 과 Refresh Token 을 생성합니다.")
+    @Parameters({
+            @Parameter(name = "requestDto", description = "로그인 요청 객체"),
+    })
     @PostMapping
     public ResponseEntity<SignInResDto> signIn(@RequestBody SignInReqDto requestDto) {
         SignInTokenDto tokenDto = accountService.signIn(requestDto);
@@ -34,6 +44,12 @@ public class AuthController {
                 .body(tokenDto.toSignInResDto());
     }
 
+    @Operation(summary = "재인증", description = "Refresh Token 으로 Access Token 을 재발급합니다.")
+    @Parameters({
+            @Parameter(name = "requestDto", description = "Access Token 객체"),
+            @Parameter(name = "rtCookie", description = "Refresh Token 값"),
+//            @Parameter(name = "rtCookie", description = "Refresh Token 값", required = false, in = ParameterIn.COOKIE),
+    })
     @PostMapping("/refresh")
     public ResponseEntity<AccessTokenDto> refresh(
             @RequestBody AccessTokenDto requestDto,
@@ -47,6 +63,10 @@ public class AuthController {
                 .body(resDto);
     }
 
+    @Operation(summary = "로그아웃", description = "Refresh Token 을 BlackList 로 설정합니다.")
+    @Parameters({
+            @Parameter(name = "requestDto", description = "Access Token 객체"),
+    })
     @PostMapping("/blacklist")
     public ResponseEntity<AccessTokenDto> signOut(@RequestBody AccessTokenDto requestDto) {
         AccessTokenDto resDto = accountService.signOut(requestDto);
