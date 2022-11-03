@@ -47,6 +47,10 @@ logging.level:
 
 # springdoc swagger
 springdoc:
+  # 클라이언트가 서버에게 보내는 데이터 타입
+  default-consumes-media-type: application/json
+  # 서버가 클라이언트에게 반환하는 데이터 타입
+  default-produces-media-type: application/json
   api-docs:
     # JSON 제공 접속 path 설정
     path: /swagger/docs
@@ -61,6 +65,6 @@ springdoc:
     # 캐시 비활성화 (로컬에서만 사용 권장)
     disabled: true
 
-  # @ControllerAdvice 응답은 API 응답에 포함되지 않도록 설정
-  override-with-generic-response: false
+  # @ControllerAdvice 응답이 API 응답에 포함 (기본값 true). 필자는 ErrorHandler 에서 사용했다.
+  override-with-generic-response: true
 
