@@ -6,6 +6,8 @@
 - **Spring Data JPA**를 활용한 게시글, 댓글 CRUD 및 회원 정보와 연동
 - **logging, DataSource** 등 개발 환경 설정
 - 개발용 DB **H2**와 배포용 DB **MySQL** 등록 후 분리 
+- **springdoc 기반 Swagger3** 설정
+- **Docker** 컨테이터 구축
 - **SMTP**를 활용한 메일 전송 기능
 - **MockitoExtension**를 활용한 단위 테스트와 **SpringExtension**를 활용한 통합 테스트 코드 작성
 
