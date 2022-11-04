@@ -4,6 +4,11 @@ plugins {
 	id 'java'
 }
 
+// 빌드 시 Plain jar 생성되지 않도록 설정
+jar {
+	enabled = false
+}
+
 group = 'com.jinsim'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
