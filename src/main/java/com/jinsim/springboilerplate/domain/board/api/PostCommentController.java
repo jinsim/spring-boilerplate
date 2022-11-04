@@ -27,7 +27,8 @@ public class PostCommentController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CommentResDto createComment(@PathVariable final Long postId, @RequestBody @Valid final CommentReqDto.Create reqDto,
+    public CommentResDto createComment(@PathVariable final Long postId,
+                                       @RequestBody @Valid final CommentReqDto.Create reqDto,
                                        @AuthUser Account account) {
 
         Long commentId = commentService.create(reqDto, postId, account);
@@ -47,8 +48,9 @@ public class PostCommentController {
     @PostMapping("/obj")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CommentResDto createCommentObj(@PathVariable final Long postId, @RequestBody @Valid final CommentReqDto.Create reqDto,
-                                       @AuthUser Account account) {
+    public CommentResDto createCommentObj(@PathVariable final Long postId,
+                                          @RequestBody @Valid final CommentReqDto.Create reqDto,
+                                          @AuthUser Account account) {
 
         Long commentId = commentService.createObj(reqDto, postId, account);
         Comment comment = commentService.findById(commentId);

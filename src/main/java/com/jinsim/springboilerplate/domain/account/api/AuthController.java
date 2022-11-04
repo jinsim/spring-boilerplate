@@ -47,13 +47,12 @@ public class AuthController {
     @Operation(summary = "재인증", description = "Refresh Token 으로 Access Token 을 재발급합니다.")
     @Parameters({
             @Parameter(name = "requestDto", description = "Access Token 객체"),
-            @Parameter(name = "rtCookie", description = "Refresh Token 값"),
+            // @CookieValue 보고 자동으로 만들어준다.
 //            @Parameter(name = "rtCookie", description = "Refresh Token 값", required = false, in = ParameterIn.COOKIE),
     })
     @PostMapping("/refresh")
-    public ResponseEntity<AccessTokenDto> refresh(
-            @RequestBody AccessTokenDto requestDto,
-            @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
+    public ResponseEntity<AccessTokenDto> refresh(@RequestBody AccessTokenDto requestDto,
+                                                  @CookieValue(value = "refreshToken", required = false) Cookie rtCookie) {
 
         String refreshToken = rtCookie.getValue();
 
