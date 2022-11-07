@@ -1,0 +1,25 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring_boilerplate?serverTimezone=Asia/Seoul
+    username: springuser
+    password: springpassword
+
+  jpa:
+    hibernate:
+      # 실제 운영할 때는 validate 나 none 으로 설정해야 한다. DB가 날아갈 수 있다.
+      # 다만 처음에 시작할 때는 create나 update로 테이블을 생성해주어야 한다.
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        default_batch_fetch_size: 500
+
+logging.level:
+  # logger 를 통해 하이버네이트 실행 SQL을 남긴다. INFO, WARN, ERROR 만 남기도록 설정한다.
+  org.hibernate.SQL: info

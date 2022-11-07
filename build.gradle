@@ -55,6 +55,9 @@ dependencies {
 	// Spring Security를 사용하는 경우 추가. @AuthenticationPrincipal 무시해준다.
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-security', version: '1.6.11'
 
+	// MySQL
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.31'
+
 
 }
 
