@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostResDto {
 
+    @Schema(description = "아이디", example = "1")
+    private Long postId;
     @Schema(description = "제목", example = "테스트 게시글 제목")
     private String title;
     @Schema(description = "내용", example = "테스트 게시글 내용입니다.")
@@ -34,6 +36,7 @@ public class PostResDto {
 
     public static PostResDto of(Post post) {
         return PostResDto.builder()
+                .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .writerName(post.getWriter().getName())

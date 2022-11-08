@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostListResDto {
 
+    @Schema(description = "단일 게시글 객체 목록")
     private List<SinglePost> posts;
+    @Schema(description = "게시글 수", example = "1")
     private Integer count;
 
-    @Schema(name = "게시글 목록 응답 단일 객체", description = "게시글 목록 응답 객체에 포함되는 단일 객체입니다.")
+    @Schema(name = "단일 게시글 객체", description = "게시글 목록 응답 객체에 포함되는 단일 게시글 객체입니다.")
     @Getter
     public static class SinglePost{
 
