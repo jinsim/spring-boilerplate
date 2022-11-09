@@ -4,7 +4,9 @@ import com.jinsim.springboilerplate.domain.account.domain.Account;
 import com.jinsim.springboilerplate.domain.account.service.AuthUser;
 import com.jinsim.springboilerplate.domain.board.domain.Comment;
 import com.jinsim.springboilerplate.domain.board.domain.Post;
+import com.jinsim.springboilerplate.domain.board.domain.PostLike;
 import com.jinsim.springboilerplate.domain.board.service.CommentService;
+import com.jinsim.springboilerplate.domain.board.service.PostLikeService;
 import com.jinsim.springboilerplate.domain.board.service.PostService;
 import com.jinsim.springboilerplate.domain.board.dto.CommentListResDto;
 import com.jinsim.springboilerplate.domain.board.dto.PostListResDto;
@@ -29,8 +31,9 @@ public class AccountBoardController {
 
     private final CommentService commentService;
     private final PostService postService;
+    private final PostLikeService postLikeService;
 
-    @Operation(summary = "댓글 목록 조회", description = "특정 회원이 작성한 댓글 목록을 조회합니다.")
+    @Operation(summary = "작성 댓글 목록 조회", description = "특정 회원이 작성한 댓글 목록을 조회합니다.")
     @Parameters({
             @Parameter(name = "accountId", description = "회원 아이디", example = "1")
     })
@@ -42,7 +45,7 @@ public class AccountBoardController {
         return CommentListResDto.Account.of(account.getName(), commentList);
     }
 
-    @Operation(summary = "게시글 목록 조회", description = "특정 회원이 작성한 게시글 목록을 조회합니다.")
+    @Operation(summary = "작성 게시글 목록 조회", description = "특정 회원이 작성한 게시글 목록을 조회합니다.")
     @Parameters({
             @Parameter(name = "accountId", description = "회원 아이디", example = "1")
     })
@@ -53,4 +56,20 @@ public class AccountBoardController {
         List<Post> postList = postService.findByWriter(account);
         return PostListResDto.of(postList);
     }
+
+    @Operation(summary = "좋아요 게시글 목록 조회", description = "특정 회원이 좋아요한 게시글 목록을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "accountId", description = "회원 아이디", example = "1")
+    })
+    @GetMapping("/like/posts")
+    @PreAuthorize("isAuthenticated() and (( @accountService.findById(#accountId).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+    @ResponseStatus(value = HttpStatus.OK)
+    public PostListResDto getAccountLikePosts(@PathVariable final Long accountId, @AuthUser Account account) {
+        List<Post> postList = postService.findByWriter(account);
+        List<PostLike> postLikeList = postLikeService.findByWriter(account);
+        List<Post> likePostList = postLikeService.findLikePostList(postLikeList);
+
+        return PostListResDto.of(likePostList);
+    }
+
 }

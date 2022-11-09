@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,6 +36,18 @@ public class PostLikeService {
     public Integer countPostLike(Post post) {
         Integer count = postLikeRepository.countByPost(post);
         return count;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostLike> findByWriter(Account account) {
+        return postLikeRepository.findByWriter(account);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> findLikePostList(List<PostLike> postLikeList) {
+       return postLikeList.stream()
+                .map(PostLike::getPost)
+                .collect(Collectors.toList());
     }
 
     public void create(Long postId, Account account) {
