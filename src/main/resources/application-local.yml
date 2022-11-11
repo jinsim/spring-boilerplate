@@ -4,37 +4,22 @@ spring:
       on-profile: local
 
   datasource:
-    # H2 DB를 인메모리 모드로 둔다. MySQL 문법을 사용한다.
-    url: jdbc:h2:mem:testdb;MODE=MySQL
-    # 기본 계정이 sa에 비밀번호 없음이다.
-    username: sa
-    password:
-    # DB 커넥션과 관련된 데이터 소스 설정이 완료된다.
-    driver-class-name: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring_boilerplate
+    username: springuser
+    password: springpassword
 
-    # H2 콘솔 활성화
-    h2:
-      console:
-        enabled: true
-
-    jpa:
+  jpa:
+    hibernate:
+      # 실제 운영할 때는 validate 나 none 으로 설정해야 한다. DB가 날아갈 수 있다.
+      # 다만 처음에 시작할 때는 create나 update로 테이블을 생성해주어야 한다.
+      ddl-auto: none
+    properties:
       hibernate:
-        # 자동으로 테이블을 만들어주는 모드. create로 두면 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
-        ddl-auto: create
-      # 하이버네이트와 관련된 특정 프로퍼티를 사용할 수 있다.
-      properties:
-        hibernate:
-          # System.out 에 하이버네이트 실행 SQL을 남긴다. org.hibernate.SQL을 사용해서 logger로 출력할 것이다.
-          # show_sql: true
-          # SQL을 가독성 있게 출력한다.
-          format_sql: true
-          # ANSI SQL에 맞게 색을 칠해준다.
-          highlight_sql: true
-          # 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
-          default_batch_fetch_size: 500
+        format_sql: true
+        highlight_sql: true
+        default_batch_fetch_size: 500
 
 logging.level:
-  # logger를 통해 하이버네이트 실행 SQL을 남긴다.
+  # logger 를 통해 하이버네이트 실행 SQL을 남긴다. INFO, WARN, ERROR 만 남기도록 설정한다.
   org.hibernate.SQL: debug
-  # 파라미터를 출력한다. 다만 너무 길기 때문에, p6spy 라이프러리를 사용할 것이다.
-  # org.hibernate.type: trace

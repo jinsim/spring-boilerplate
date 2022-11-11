@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    default: test
+    group:
+      # test, common profile 을 함께 구동
+      test:
+        - common
+      # local, common profile 을 함께 구동
+      local:
+        - common
+      # prod, common profile 을 함께 구동
+      prod:
+        - common
