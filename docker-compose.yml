@@ -28,6 +28,7 @@ services:
     # 실패시 재시도
     restart: on-failure
     env_file:
+      - ./config/spring.env
       # application.yml에 데이터베이스 관련 환경 설정이 필요하므로 추가한다.
       - ./config/mysql.env
     # mysql 부터 먼저 실행하도록 설정하지만, 완전히 실행되어 준비될 때까지 기다리진 않는다.

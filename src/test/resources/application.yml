@@ -1,13 +1,10 @@
 spring:
   profiles:
     default: test
-    group:
-      # test, common profile 을 함께 구동
-      test:
-        - common
-      # local, common profile 을 함께 구동
-      local:
-        - common
-      # prod, common profile 을 함께 구동
-      prod:
-        - common
+
+  # 환경변수 더미 데이터 설정
+  redis:
+    host: localhost
+    port: 6379
+  jwt:
+    secret: testtesttesttesttesttesttesttest

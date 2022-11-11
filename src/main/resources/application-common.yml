@@ -10,7 +10,7 @@ spring:
   jwt:
     # 글자가 짧으면 WeakKeyException 에러가 발생한다. 32글자 이상이어야 한다.
     # 추후에 환경 변수로 넣어야 한다.
-    secret: ${JWT_SECRET}
+    secret: ${SPRING_JWT_SECRET}
 
 # springdoc swagger
 springdoc:
