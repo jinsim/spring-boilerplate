@@ -5,9 +5,11 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/spring_boilerplate?serverTimezone=Asia/Seoul
-    username: springuser
-    password: springpassword
+    # jdbc:mysql://[데이터베이스 서비스 명]:[데이터베이스 포트]/[데이터베이스 명]
+    url: jdbc:mysql://db_mysql:3306/${MYSQL_DATABASE}
+    # 데이터베이스에 접속할 사용자와 비밀번호
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 
   jpa:
     hibernate:
@@ -22,4 +24,4 @@ spring:
 
 logging.level:
   # logger 를 통해 하이버네이트 실행 SQL을 남긴다. INFO, WARN, ERROR 만 남기도록 설정한다.
-  org.hibernate.SQL: info
+  org.hibernate.SQL: debug

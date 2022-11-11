@@ -1,0 +1,35 @@
+# 파일 규격 버전 3 사용
+version: "3"
+
+# 실행하려는 컨테이너들을 정의
+services:
+
+  # MySQL 데이터베이스
+  db_mysql:
+    # 베이스 이미지. MySQL 8 사용
+    image: mysql:8
+    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    ports:
+      - "3306:3306"
+    # 명령어 실행
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    # 설정에 필요한 환경변수들
+    env_file:
+      - ./config/mysql.env
+
+  # Spring 애플리케이션
+  app_spring:
+    # Dockerfile 의 위치를 지정하여, build 후에 사용할 수 있다.
+    build: .
+    ports:
+      - "8080:8080"
+    # 실패시 재시도
+    restart: on-failure
+    env_file:
+      # application.yml에 데이터베이스 관련 환경 설정이 필요하므로 추가한다.
+      - ./config/mysql.env
+    # mysql 부터 먼저 실행하도록 설정하지만, 완전히 실행되어 준비될 때까지 기다리진 않는다.
+    depends_on:
+      - db_mysql
