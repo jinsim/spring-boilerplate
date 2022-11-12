@@ -8,13 +8,12 @@ services:
   db_mysql:
     # 베이스 이미지. MySQL 8 사용
     image: mysql:8
-    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부). 필자는 로컬 MySQL 3306과 겹치지 않도록 3307으로 선택
     ports:
-      - "3306:3306"
+      - "3307:3306"
     # 명령어 실행
     command:
-      - "--character-set-server=utf8mb4"
-      - "--collation-server=utf8mb4_unicode_ci"
+      - "--default-authentication-plugin=mysql_native_password"
     # 설정에 필요한 환경변수들
     env_file:
       - ./config/mysql.env
