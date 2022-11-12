@@ -17,6 +17,8 @@ services:
     # 설정에 필요한 환경변수들
     env_file:
       - ./config/mysql.env
+    volumes:
+      - ./db:/var/lib/mysql
 
   # Spring 애플리케이션
   app_spring:
