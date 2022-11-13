@@ -20,6 +20,14 @@ services:
     volumes:
       - ./db:/var/lib/mysql
 
+  # Redis캐시서버
+  cache_redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./config/redis.env
+
   # Spring 애플리케이션
   app_spring:
     # Dockerfile 의 위치를 지정하여, build 후에 사용할 수 있다.
@@ -32,6 +40,8 @@ services:
       - ./config/spring.env
       # application.yml에 데이터베이스 관련 환경 설정이 필요하므로 추가한다.
       - ./config/mysql.env
+      - ./config/redis.env
     # mysql 부터 먼저 실행하도록 설정하지만, 완전히 실행되어 준비될 때까지 기다리진 않는다.
     depends_on:
       - db_mysql
+      - cache_redis
