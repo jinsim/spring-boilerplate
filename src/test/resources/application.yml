@@ -3,8 +3,7 @@ spring:
     default: test
 
   # 환경변수 더미 데이터 설정
-  redis:
-    host: localhost
-    port: 6379
   jwt:
     secret: testtesttesttesttesttesttesttest
+  redis:
+    password: testpassword

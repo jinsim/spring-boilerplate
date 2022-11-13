@@ -3,10 +3,6 @@ spring:
     activate:
       on-profile: common
 
-  redis:
-    host: localhost
-    port: 6379
-
   jwt:
     # 글자가 짧으면 WeakKeyException 에러가 발생한다. 32글자 이상이어야 한다.
     # 추후에 환경 변수로 넣어야 한다.
