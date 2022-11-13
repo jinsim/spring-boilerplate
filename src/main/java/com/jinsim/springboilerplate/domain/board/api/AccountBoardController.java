@@ -65,7 +65,6 @@ public class AccountBoardController {
     @PreAuthorize("isAuthenticated() and (( @accountService.findById(#accountId).getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(value = HttpStatus.OK)
     public PostListResDto getAccountLikePosts(@PathVariable final Long accountId, @AuthUser Account account) {
-        List<Post> postList = postService.findByWriter(account);
         List<PostLike> postLikeList = postLikeService.findByWriter(account);
         List<Post> likePostList = postLikeService.findLikePostList(postLikeList);
 
