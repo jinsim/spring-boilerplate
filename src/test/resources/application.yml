@@ -6,4 +6,4 @@ spring:
   jwt:
     secret: testtesttesttesttesttesttesttest
   redis:
-    password: testpassword
+    password: redispw
