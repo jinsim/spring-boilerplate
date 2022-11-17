@@ -8,8 +8,11 @@ import com.jinsim.springboilerplate.global.test.RepositoryTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,10 +50,22 @@ class PostRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    void findByTitleTest() {
+    void findByTitleContainsTest() {
         String title = "title";
         List<Post> posts = postRepository.findByTitleContains(title);
         assertThat(posts.size()).isEqualTo(4);
+    }
+
+    @Test
+    @Transactional
+    void updateViewCountTest() {
+        Long postId = 1L;
+        Post post = postRepository.findById(postId).get();
+        System.out.println("post.get().getId() = " + post.getId());
+        System.out.println("post.getViewCount() = " + post.getViewCount());
+        postRepository.updateViewCount(postId);
+        System.out.println("post.getViewCount() = " + postRepository.findById(postId).get().getViewCount());
+
     }
 
     private Account createAccount(String email, String name, String encodedPassword) {
