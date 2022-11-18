@@ -34,6 +34,10 @@ class PostRepositoryTest extends RepositoryTest {
         createPost("title3", "content3", account1);
         createPost("title4", "content4", account2);
         createPost("title5", "content5", account2);
+        List<Post> posts = postRepository.findByTitleContains("t");
+        for (Post post : posts) {
+            System.out.println("post.getId() = " + post.getId());
+        }
     }
 
     @Test
@@ -57,15 +61,12 @@ class PostRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    @Transactional
     void updateViewCountTest() {
-        Long postId = 1L;
-        Post post = postRepository.findById(postId).get();
-        System.out.println("post.get().getId() = " + post.getId());
-        System.out.println("post.getViewCount() = " + post.getViewCount());
-        postRepository.updateViewCount(postId);
-        System.out.println("post.getViewCount() = " + postRepository.findById(postId).get().getViewCount());
-
+        Post post = postRepository.findByTitle("title1").get(); // Auto Increment PK 는 롤백되지 않아서 title로 조회
+        Long postId = post.getId();
+        postRepository.updateViewCount(postId); // @Query 로 작성하여 영속성 컨텍스트에 반영 안됨
+        assertThat(post.getViewCount()).isEqualTo(0); // 1차 캐시에 남아 있는 객체를 조회하므로 반영 안됨
+        assertThat(postRepository.findById(postId).get().getViewCount()).isEqualTo(1); // 새로 조회해서 반영 됨
     }
 
     private Account createAccount(String email, String name, String encodedPassword) {

@@ -19,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTitleContains(String title);
 
     // 조회수 증가 코드. ModifiedDate를 변경시키지 않기 위함.
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true) // 연산 이후 영속성 컨텍스트를 clear 하도록 설정
     @Query("UPDATE Post p SET p.viewCount = p.viewCount + 1 WHERE p.id = :postId")
     void updateViewCount(@Param("postId") Long postId);
 
