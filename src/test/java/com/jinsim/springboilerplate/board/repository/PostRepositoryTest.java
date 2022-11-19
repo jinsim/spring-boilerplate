@@ -8,6 +8,7 @@ import com.jinsim.springboilerplate.global.test.RepositoryTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 class PostRepositoryTest extends RepositoryTest {
 
@@ -60,10 +62,11 @@ class PostRepositoryTest extends RepositoryTest {
         assertThat(posts.size()).isEqualTo(4);
     }
 
+    @DirtiesContext(methodMode = BEFORE_METHOD) // 특정 케이스를 시작하기 전에 context 재생성
     @Test
     void updateViewCountTest() {
-        Post post = postRepository.findByTitle("title1").get(); // Auto Increment PK 는 롤백되지 않아서 title로 조회
-        Long postId = post.getId();
+        Long postId = 1L;
+        Post post = postRepository.findById(postId).get();
         postRepository.updateViewCount(postId); // @Query 로 작성하여 영속성 컨텍스트에 반영 안됨
         assertThat(post.getViewCount()).isEqualTo(0); // 1차 캐시에 남아 있는 객체를 조회하므로 반영 안됨
         assertThat(postRepository.findById(postId).get().getViewCount()).isEqualTo(1); // 새로 조회해서 반영 됨
