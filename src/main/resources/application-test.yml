@@ -5,7 +5,7 @@ spring:
 
   datasource:
     # H2 DB를 인메모리 모드로 둔다. MySQL 문법을 사용한다.
-    url: jdbc:h2:mem:testdb;MODE=MySQL
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     # 기본 계정이 sa에 비밀번호 없음이다.
     username: sa
     password:
