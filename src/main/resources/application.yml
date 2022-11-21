@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: prod
+    default: local
     # commond profile을 함께 구동
     group:
       # H2 인메모리를 DB로 사용

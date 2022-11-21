@@ -27,9 +27,9 @@ spring:
           # System.out 에 하이버네이트 실행 SQL을 남긴다. org.hibernate.SQL을 사용해서 logger로 출력할 것이다.
           # show_sql: true
           # SQL을 가독성 있게 출력한다.
-          format_sql: true
+          # format_sql: true
           # ANSI SQL에 맞게 색을 칠해준다.
-          highlight_sql: true
+          # highlight_sql: true
           # 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
           default_batch_fetch_size: 500
 

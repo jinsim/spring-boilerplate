@@ -18,8 +18,6 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
-        highlight_sql: true
         default_batch_fetch_size: 500
 
   redis:
@@ -30,3 +28,9 @@ spring:
 logging.level:
   # logger 를 통해 하이버네이트 실행 SQL을 남긴다. INFO, WARN, ERROR 만 남기도록 설정한다.
   org.hibernate.SQL: debug
+
+# 배포 환경에서는 리소스 소모가 심하므로 p6spy 로깅을 OFF 해준다.
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
