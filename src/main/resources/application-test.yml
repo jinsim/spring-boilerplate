@@ -24,7 +24,7 @@ spring:
       # 하이버네이트와 관련된 특정 프로퍼티를 사용할 수 있다.
       properties:
         hibernate:
-          # System.out 에 하이버네이트 실행 SQL을 남긴다. org.hibernate.SQL을 사용해서 logger로 출력할 것이다.
+          # System.out 에 하이버네이트 실행 SQL을 남긴다. 이거보다 org.hibernate.SQL을 사용해서 logger로 출력할 것이다.
           # show_sql: true
           # SQL을 가독성 있게 출력한다.
           # format_sql: true
@@ -37,8 +37,8 @@ spring:
     host: localhost
     port: 6379
 
-logging.level:
-  # logger를 통해 하이버네이트 실행 SQL을 남긴다.
-  org.hibernate.SQL: debug
+#logging.level:
+  # logger를 통해 하이버네이트 실행 SQL을 남긴다. show_sql 보다 더 좋다.
+#  org.hibernate.SQL: debug
   # 파라미터를 출력한다. 다만 너무 길기 때문에, p6spy 라이프러리를 사용할 것이다.
   # org.hibernate.type: trace

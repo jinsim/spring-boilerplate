@@ -9,11 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
@@ -36,10 +33,6 @@ class PostRepositoryTest extends RepositoryTest {
         createPost("title3", "content3", account1);
         createPost("title4", "content4", account2);
         createPost("title5", "content5", account2);
-        List<Post> posts = postRepository.findByTitleContains("t");
-        for (Post post : posts) {
-            System.out.println("post.getId() = " + post.getId());
-        }
     }
 
     @Test
